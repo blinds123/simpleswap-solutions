@@ -280,6 +280,14 @@
     
     <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.1/build/qrcode.min.js"></script>
     <script>
+    // Register service worker
+    if ('serviceWorker' in navigator && window.location.protocol === 'https:') {
+        navigator.serviceWorker.register('./service-worker.js')
+            .then(reg => console.log('Service Worker registered'))
+            .catch(err => console.log('Service Worker registration failed:', err));
+    }
+    </script>
+    <script>
     // Quantum Route Selection Logic
     let deferredPrompt;
     
@@ -355,11 +363,18 @@
     
     // Copy Text Helper
     function copyText(text) {
+        const element = event.currentTarget || event.target;
         navigator.clipboard.writeText(text).then(() => {
-            event.target.querySelector('.copied').classList.add('show');
-            setTimeout(() => {
-                event.target.querySelector('.copied').classList.remove('show');
-            }, 2000);
+            const copiedElement = element.querySelector('.copied');
+            if (copiedElement) {
+                copiedElement.classList.add('show');
+                setTimeout(() => {
+                    copiedElement.classList.remove('show');
+                }, 2000);
+            }
+        }).catch(err => {
+            console.error('Failed to copy:', err);
+            alert('Copied: ' + text);
         });
     }
     
