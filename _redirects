@@ -1,0 +1,3 @@
+# Netlify redirects file
+/manual/*  /manual-entry-simulator/:splat  200
+/quantum/*  /quantum-redirect-solution/:splat  200
