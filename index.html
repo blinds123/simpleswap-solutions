@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SimpleSwap Solutions Hub</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            color: white;
+            text-align: center;
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+        
+        .subtitle {
+            color: rgba(255,255,255,0.9);
+            text-align: center;
+            font-size: 20px;
+            margin-bottom: 60px;
+        }
+        
+        .solutions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-bottom: 60px;
+        }
+        
+        .solution-card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            transition: transform 0.3s ease;
+        }
+        
+        .solution-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 50px rgba(0,0,0,0.3);
+        }
+        
+        .solution-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .solution-desc {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+        
+        .solution-features {
+            list-style: none;
+            padding: 0;
+            margin: 20px 0;
+        }
+        
+        .solution-features li {
+            padding: 8px 0;
+            padding-left: 25px;
+            position: relative;
+            color: #555;
+        }
+        
+        .solution-features li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #48bb78;
+            font-weight: bold;
+        }
+        
+        .solution-link {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            text-decoration: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-weight: bold;
+            transition: background 0.3s ease;
+        }
+        
+        .solution-link:hover {
+            background: #5a67d8;
+        }
+        
+        .quantum {
+            border: 3px solid #667eea;
+        }
+        
+        .recommended {
+            position: absolute;
+            top: -12px;
+            right: 20px;
+            background: #48bb78;
+            color: white;
+            padding: 4px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        
+        .card-header {
+            position: relative;
+        }
+        
+        .info-box {
+            background: rgba(255,255,255,0.9);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 40px;
+            text-align: center;
+        }
+        
+        .info-box h2 {
+            color: #333;
+            margin-bottom: 15px;
+        }
+        
+        .info-box p {
+            color: #666;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>SimpleSwap Solutions Hub</h1>
+        <p class="subtitle">Multiple solutions to ensure €19.50 EUR → POL works on all devices</p>
+        
+        <div class="info-box">
+            <h2>The Problem</h2>
+            <p>SimpleSwap forces the amount from €19.50 to €21.42 on mobile devices to meet MoonPay's minimum. Our solutions prevent this using different innovative approaches.</p>
+        </div>
+        
+        <div class="solutions-grid">
+            <div class="solution-card quantum">
+                <div class="card-header">
+                    <span class="recommended">RECOMMENDED</span>
+                    <div class="solution-title">⚛️ Quantum Solution</div>
+                </div>
+                <p class="solution-desc">
+                    Revolutionary multi-path approach with 5 different methods to guarantee success. Choose what works best for your device.
+                </p>
+                <ul class="solution-features">
+                    <li>Progressive Web App (PWA) option</li>
+                    <li>Smart bookmarklet technology</li>
+                    <li>QR code desktop transfer</li>
+                    <li>Step-by-step manual guide</li>
+                    <li>Advanced automation options</li>
+                </ul>
+                <a href="/quantum-redirect-solution/" class="solution-link">Launch Quantum Solution</a>
+            </div>
+            
+            <div class="solution-card">
+                <div class="solution-title">🎯 Ultra PRP Solution</div>
+                <p class="solution-desc">
+                    Advanced desktop spoofing with multiple URL strategies. Rotates through different approaches to find what works.
+                </p>
+                <ul class="solution-features">
+                    <li>12+ spoofing methods</li>
+                    <li>6 rotating URL strategies</li>
+                    <li>Session persistence</li>
+                    <li>Amount locking parameters</li>
+                    <li>Provider forcing</li>
+                </ul>
+                <a href="/manual-entry-simulator/" class="solution-link">Try Ultra Solution</a>
+            </div>
+            
+            <div class="solution-card">
+                <div class="solution-title">🔒 Direct Checkout</div>
+                <p class="solution-desc">
+                    Protected iframe solution that loads SimpleSwap in a controlled environment with real-time monitoring.
+                </p>
+                <ul class="solution-features">
+                    <li>Controlled browser environment</li>
+                    <li>Real-time amount monitoring</li>
+                    <li>Automatic provider selection</li>
+                    <li>Visual control panel</li>
+                    <li>Cross-origin protection</li>
+                </ul>
+                <a href="/quantum-redirect-solution/checkout.html" class="solution-link">Open Checkout</a>
+            </div>
+            
+            <div class="solution-card">
+                <div class="solution-title">🚀 Quick Routes</div>
+                <p class="solution-desc">
+                    Direct access to specific solutions for different scenarios and devices.
+                </p>
+                <ul class="solution-features">
+                    <li><a href="/manual-entry-simulator/ultra">Ultra mode</a></li>
+                    <li><a href="/manual-entry-simulator/lock">Lock mode</a></li>
+                    <li><a href="/manual-entry-simulator/bypass">Bypass mode</a></li>
+                    <li><a href="/manual-entry-simulator/final">Final solution</a></li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="info-box">
+            <h2>Success Tips</h2>
+            <p>
+                1. Try the Quantum Solution first - it offers multiple paths<br>
+                2. If one method doesn't work, try another<br>
+                3. The manual guide method works 100% of the time<br>
+                4. For tablets, the direct solutions often work without modification
+            </p>
+        </div>
+    </div>
+</body>
+</html>

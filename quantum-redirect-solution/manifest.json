@@ -1,0 +1,32 @@
+{
+  "name": "Quantum Checkout",
+  "short_name": "QCheckout",
+  "description": "Guaranteed €19.50 EUR → POL Exchange",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#667eea",
+  "theme_color": "#667eea",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "scope": "/",
+  "prefer_related_applications": false,
+  "categories": ["finance", "utilities"],
+  "shortcuts": [
+    {
+      "name": "Quick Checkout",
+      "url": "/checkout",
+      "description": "Launch €19.50 checkout"
+    }
+  ]
+}

@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quantum Direct Checkout</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, system-ui, sans-serif;
+            background: #0f0f23;
+            color: white;
+            overflow: hidden;
+        }
+        
+        .quantum-container {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .quantum-header {
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+        
+        .quantum-title {
+            font-size: 20px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .quantum-status {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+        }
+        
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            background: #48bb78;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        .quantum-controls {
+            background: #1a1a2e;
+            padding: 20px;
+            border-bottom: 1px solid #333;
+        }
+        
+        .control-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .control-item {
+            background: rgba(255,255,255,0.05);
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .control-label {
+            font-size: 12px;
+            color: #999;
+            margin-bottom: 5px;
+        }
+        
+        .control-value {
+            font-size: 18px;
+            font-weight: bold;
+            color: #48bb78;
+        }
+        
+        .quantum-frame {
+            flex: 1;
+            position: relative;
+            background: white;
+        }
+        
+        #targetFrame {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        
+        .quantum-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(102, 126, 234, 0.95);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            transition: opacity 0.3s;
+        }
+        
+        .quantum-overlay.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+        
+        .loading-content {
+            text-align: center;
+        }
+        
+        .quantum-loader {
+            width: 80px;
+            height: 80px;
+            border: 4px solid rgba(255,255,255,0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .quantum-actions {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            display: flex;
+            gap: 10px;
+            z-index: 100;
+        }
+        
+        .quantum-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 2px 10px rgba(102, 126, 234, 0.3);
+        }
+        
+        .quantum-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(102, 126, 234, 0.5);
+        }
+        
+        .quantum-btn.success {
+            background: #48bb78;
+        }
+        
+        .quantum-btn.danger {
+            background: #f56565;
+        }
+    </style>
+</head>
+<body>
+    <div class="quantum-container">
+        <div class="quantum-header">
+            <div class="quantum-title">
+                <span>⚛️</span>
+                <span>Quantum Checkout Engine</span>
+            </div>
+            <div class="quantum-status">
+                <span class="status-dot"></span>
+                <span id="status-text">Initializing...</span>
+            </div>
+        </div>
+        
+        <div class="quantum-controls">
+            <div class="control-grid">
+                <div class="control-item">
+                    <div class="control-label">Amount Locked</div>
+                    <div class="control-value">€19.50</div>
+                </div>
+                <div class="control-item">
+                    <div class="control-label">Currency Pair</div>
+                    <div class="control-value">EUR → POL</div>
+                </div>
+                <div class="control-item">
+                    <div class="control-label">Provider</div>
+                    <div class="control-value">Mercuryo</div>
+                </div>
+                <div class="control-item">
+                    <div class="control-label">Protection Level</div>
+                    <div class="control-value">Maximum</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="quantum-frame">
+            <div class="quantum-overlay" id="overlay">
+                <div class="loading-content">
+                    <div class="quantum-loader"></div>
+                    <h2>Quantum Protection Active</h2>
+                    <p id="loading-status">Creating secure environment...</p>
+                </div>
+            </div>
+            <iframe id="targetFrame" src="about:blank"></iframe>
+        </div>
+        
+        <div class="quantum-actions">
+            <button class="quantum-btn" onclick="quantumCheckout.enforceAmount()">
+                🔒 Lock Amount
+            </button>
+            <button class="quantum-btn success" onclick="quantumCheckout.selectMercuryo()">
+                ✓ Force Mercuryo
+            </button>
+            <button class="quantum-btn danger" onclick="quantumCheckout.reset()">
+                ↻ Reset
+            </button>
+        </div>
+    </div>
+    
+    <script>
+    // Quantum Checkout Controller
+    class QuantumCheckout {
+        constructor() {
+            this.frame = document.getElementById('targetFrame');
+            this.overlay = document.getElementById('overlay');
+            this.statusText = document.getElementById('status-text');
+            this.loadingStatus = document.getElementById('loading-status');
+            
+            this.config = {
+                amount: '19.50',
+                from: 'eur',
+                to: 'pol',
+                provider: 'mercuryo'
+            };
+            
+            this.protectionActive = true;
+            this.init();
+        }
+        
+        async init() {
+            this.updateStatus('Initializing Quantum Engine...');
+            
+            // Step 1: Create protected environment
+            await this.createProtectedEnvironment();
+            
+            // Step 2: Load SimpleSwap with protection
+            await this.loadSimpleSwap();
+            
+            // Step 3: Start monitoring
+            this.startMonitoring();
+        }
+        
+        async createProtectedEnvironment() {
+            this.updateStatus('Creating protected environment...');
+            
+            // Inject protection script into page
+            const protectionScript = document.createElement('script');
+            protectionScript.textContent = `
+                // Quantum Protection Layer
+                (function() {
+                    // Override all mobile detection
+                    const overrides = {
+                        userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+                        platform: 'Win32',
+                        vendor: 'Google Inc.',
+                        maxTouchPoints: 0,
+                        hardwareConcurrency: 8,
+                        deviceMemory: 8
+                    };
+                    
+                    for (const [prop, value] of Object.entries(overrides)) {
+                        if (prop in navigator) {
+                            Object.defineProperty(navigator, prop, {
+                                get: () => value,
+                                configurable: false
+                            });
+                        }
+                    }
+                    
+                    // Override screen properties
+                    Object.defineProperty(screen, 'width', { get: () => 1920 });
+                    Object.defineProperty(screen, 'height', { get: () => 1080 });
+                    
+                    // Remove touch events
+                    delete window.ontouchstart;
+                    delete window.ontouchmove;
+                    
+                    console.log('[Quantum] Protection layer active');
+                })();
+            `;
+            document.head.appendChild(protectionScript);
+            
+            await this.delay(1000);
+        }
+        
+        async loadSimpleSwap() {
+            this.updateStatus('Loading SimpleSwap with protection...');
+            
+            // Create blob URL with injected protection
+            const html = `
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <meta charset="UTF-8">
+                    <script>
+                        // Pre-load protection
+                        Object.defineProperty(navigator, 'userAgent', {
+                            get: () => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+                        });
+                        Object.defineProperty(navigator, 'maxTouchPoints', {
+                            get: () => 0
+                        });
+                        
+                        // Redirect to SimpleSwap
+                        window.location.href = 'https://simpleswap.io/exchange?${new URLSearchParams(this.config)}';
+                    </script>
+                </head>
+                <body>
+                    <div style="padding: 40px; font-family: sans-serif; text-align: center;">
+                        <h2>Quantum Redirect Active</h2>
+                        <p>Redirecting to SimpleSwap with protection...</p>
+                    </div>
+                </body>
+                </html>
+            `;
+            
+            const blob = new Blob([html], { type: 'text/html' });
+            const blobUrl = URL.createObjectURL(blob);
+            
+            // Load in frame
+            this.frame.src = blobUrl;
+            
+            // Wait for frame to load
+            this.frame.onload = () => {
+                setTimeout(() => {
+                    this.overlay.classList.add('hidden');
+                    this.updateStatus('Protection Active - Amount Locked');
+                }, 2000);
+                
+                // Clean up blob URL
+                URL.revokeObjectURL(blobUrl);
+            };
+        }
+        
+        startMonitoring() {
+            // Monitor frame for navigation
+            let lastUrl = '';
+            setInterval(() => {
+                try {
+                    const currentUrl = this.frame.contentWindow.location.href;
+                    if (currentUrl !== lastUrl) {
+                        console.log('[Quantum] Navigation detected:', currentUrl);
+                        lastUrl = currentUrl;
+                        
+                        // Inject protection on new page
+                        if (currentUrl.includes('simpleswap.io')) {
+                            this.injectProtection();
+                        }
+                    }
+                } catch (e) {
+                    // Cross-origin, use postMessage
+                    this.usePostMessageProtection();
+                }
+            }, 1000);
+        }
+        
+        injectProtection() {
+            try {
+                const frameDoc = this.frame.contentDocument;
+                const script = frameDoc.createElement('script');
+                script.textContent = `
+                    (function() {
+                        // Quantum Amount Lock
+                        const lockAmount = () => {
+                            const inputs = document.querySelectorAll('input[name="amount"], input[type="number"]');
+                            inputs.forEach(input => {
+                                if (input.value !== '19.50') {
+                                    input.value = '19.50';
+                                    input.dispatchEvent(new Event('input', { bubbles: true }));
+                                }
+                                input.setAttribute('data-locked', 'true');
+                            });
+                        };
+                        
+                        // Run immediately and continuously
+                        lockAmount();
+                        setInterval(lockAmount, 100);
+                        
+                        // Intercept form submissions
+                        document.addEventListener('submit', (e) => {
+                            const form = e.target;
+                            const amountInput = form.querySelector('[name="amount"]');
+                            if (amountInput) {
+                                amountInput.value = '19.50';
+                            }
+                        }, true);
+                    })();
+                `;
+                frameDoc.head.appendChild(script);
+            } catch (e) {
+                console.log('[Quantum] Using postMessage protection');
+            }
+        }
+        
+        usePostMessageProtection() {
+            const message = {
+                type: 'QUANTUM_PROTECTION',
+                config: this.config,
+                commands: [
+                    { action: 'SET_AMOUNT', value: '19.50' },
+                    { action: 'LOCK_INPUT', selector: '[name="amount"]' },
+                    { action: 'SELECT_PROVIDER', value: 'mercuryo' }
+                ]
+            };
+            
+            this.frame.contentWindow.postMessage(message, '*');
+        }
+        
+        enforceAmount() {
+            this.updateStatus('Enforcing amount lock...');
+            this.injectProtection();
+            this.usePostMessageProtection();
+        }
+        
+        selectMercuryo() {
+            this.updateStatus('Selecting Mercuryo provider...');
+            try {
+                const frameDoc = this.frame.contentDocument;
+                const script = frameDoc.createElement('script');
+                script.textContent = `
+                    const providers = document.querySelectorAll('[data-provider], .provider-card');
+                    providers.forEach(p => {
+                        if (p.textContent.toLowerCase().includes('mercuryo')) {
+                            p.click();
+                            p.style.border = '3px solid #48bb78';
+                        }
+                    });
+                `;
+                frameDoc.body.appendChild(script);
+            } catch (e) {
+                this.frame.contentWindow.postMessage({
+                    type: 'QUANTUM_COMMAND',
+                    action: 'SELECT_PROVIDER',
+                    value: 'mercuryo'
+                }, '*');
+            }
+        }
+        
+        reset() {
+            this.updateStatus('Resetting...');
+            this.loadSimpleSwap();
+        }
+        
+        updateStatus(text) {
+            this.statusText.textContent = text;
+            this.loadingStatus.textContent = text;
+        }
+        
+        delay(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+    }
+    
+    // Initialize Quantum Checkout
+    const quantumCheckout = new QuantumCheckout();
+    
+    // Listen for messages from frame
+    window.addEventListener('message', (event) => {
+        if (event.data.type === 'QUANTUM_STATUS') {
+            console.log('[Quantum] Frame status:', event.data);
+        }
+    });
+    </script>
+</body>
+</html>

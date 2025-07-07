@@ -1,0 +1,45 @@
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "SAMEORIGIN"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "no-referrer-when-downgrade"
+    Cache-Control = "no-cache, no-store, must-revalidate"
+
+[[redirects]]
+  from = "/"
+  to = "/final-prp-solution.html"
+  status = 200
+
+[[redirects]]
+  from = "/advanced"
+  to = "/index-advanced.html"
+  status = 200
+
+[[redirects]]
+  from = "/perfect"
+  to = "/perfect-replication.html"
+  status = 200
+
+[[redirects]]
+  from = "/ultra"
+  to = "/ultra-prp-solution.html"
+  status = 200
+
+[[redirects]]
+  from = "/lock"
+  to = "/ultimate-lock.html"
+  status = 200
+
+[[redirects]]
+  from = "/bypass"
+  to = "/bypass-force.html"
+  status = 200
+
+[[redirects]]
+  from = "/final"
+  to = "/final-prp-solution.html"
+  status = 200
+
+[build]
+  publish = "."

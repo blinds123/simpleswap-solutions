@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SimpleSwap Checkout</title>
+    <style>
+        body { margin: 0; display: flex; align-items: center; justify-content: center; height: 100vh; 
+               font-family: -apple-system, system-ui, sans-serif; background: #1a1a2e; color: white; }
+        .loader { text-align: center; }
+        .spinner { width: 50px; height: 50px; border: 3px solid rgba(255,255,255,0.3); 
+                   border-top: 3px solid #16c784; border-radius: 50%; animation: spin 1s linear infinite; margin: 20px auto; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+    <div class="loader">
+        <div class="spinner"></div>
+        <div>Preparing secure checkout...</div>
+        <div style="font-size: 12px; margin-top: 10px; opacity: 0.7">€19.50 EUR → POL</div>
+    </div>
+    <script>
+    (() => {
+        'use strict';
+        
+        // Minimal desktop spoofing - only essentials
+        const spoofDesktop = () => {
+            Object.defineProperty(navigator, 'maxTouchPoints', { get: () => 0 });
+            Object.defineProperty(navigator, 'platform', { get: () => 'Win32' });
+            Object.defineProperty(screen, 'orientation', { get: () => ({ angle: 0, type: 'landscape-primary' }) });
+            // Override touch event detection
+            window.ontouchstart = undefined;
+            document.ontouchstart = undefined;
+        };
+        
+        // Network-resilient approach
+        const approach = localStorage.getItem('approach') || '1';
+        
+        try {
+            spoofDesktop();
+            
+            // Three different approaches based on what works
+            const strategies = {
+                '1': () => {
+                    // Approach 1: Clean parameters with desktop markers
+                    const params = new URLSearchParams({
+                        'from': 'eur', 'to': 'pol', 'amount': '19.50',
+                        'fixed': 'false', 'ref': 'desktop', 'v': Date.now()
+                    });
+                    return 'https://simpleswap.io/exchange?' + params;
+                },
+                '2': () => {
+                    // Approach 2: Fragment-based navigation
+                    return 'https://simpleswap.io/#/exchange/eur/pol/19.50';
+                },
+                '3': () => {
+                    // Approach 3: Direct with minimal params
+                    return 'https://simpleswap.io/exchange?from=eur&to=pol&amount=19.50';
+                }
+            };
+            
+            const url = strategies[approach]();
+            
+            // Rotate approach for next time if needed
+            localStorage.setItem('approach', approach === '3' ? '1' : String(Number(approach) + 1));
+            localStorage.setItem('lastRedirect', Date.now());
+            
+            // Redirect with timing that mimics user behavior
+            setTimeout(() => window.location.replace(url), 1200);
+            
+        } catch (e) {
+            // Emergency fallback
+            setTimeout(() => {
+                window.location.replace('https://simpleswap.io/exchange?from=eur&to=pol&amount=19.50&desktop=1');
+            }, 1000);
+        }
+    })();
+    </script>
+</body>
+</html>

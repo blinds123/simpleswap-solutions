@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SimpleSwap Checkout</title>
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <style>
+        body { margin: 0; display: flex; align-items: center; justify-content: center; 
+               height: 100vh; font-family: -apple-system, system-ui, sans-serif; 
+               background: #0d1117; color: #fff; }
+        .container { text-align: center; padding: 20px; max-width: 400px; }
+        .title { font-size: 24px; font-weight: 600; margin-bottom: 30px; }
+        .amount-box { background: rgba(22, 199, 132, 0.1); border: 2px solid #16c784; 
+                      border-radius: 16px; padding: 30px; margin: 20px 0; }
+        .amount { font-size: 42px; font-weight: bold; color: #16c784; }
+        .status { font-size: 14px; opacity: 0.8; margin-top: 20px; }
+        .loading { display: inline-block; width: 20px; height: 20px; 
+                   border: 2px solid rgba(255,255,255,0.3); border-radius: 50%;
+                   border-top-color: #16c784; animation: spin 1s linear infinite;
+                   vertical-align: middle; margin-left: 10px; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">SimpleSwap Checkout</div>
+        <div class="amount-box">
+            <div class="amount">€19.50</div>
+            <div style="margin-top: 10px; opacity: 0.7;">EUR → POL</div>
+        </div>
+        <div class="status" id="status">
+            Initializing secure checkout<span class="loading"></span>
+        </div>
+    </div>
+    
+    <script>
+    // FINAL PRP ULTRA-SOLUTION - Maximum Protection Against Amount Forcing
+    (function() {
+        'use strict';
+        
+        // Configuration
+        const CONFIG = {
+            amount: '19.50',
+            from: 'eur',
+            to: 'pol',
+            provider: 'mercuryo'
+        };
+        
+        // Status updater
+        const updateStatus = (msg) => {
+            document.getElementById('status').innerHTML = msg + '<span class="loading"></span>';
+        };
+        
+        // CRITICAL: Full desktop environment spoofing
+        const createDesktopEnvironment = () => {
+            // 1. User Agent spoofing
+            const desktopUA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36';
+            
+            Object.defineProperty(navigator, 'userAgent', {
+                get: () => desktopUA,
+                configurable: false,
+                enumerable: true
+            });
+            
+            // 2. Platform spoofing
+            Object.defineProperty(navigator, 'platform', {
+                get: () => 'Win32',
+                configurable: false,
+                enumerable: true
+            });
+            
+            // 3. Touch points removal
+            Object.defineProperty(navigator, 'maxTouchPoints', {
+                get: () => 0,
+                configurable: false,
+                enumerable: true
+            });
+            
+            // 4. Vendor spoofing
+            Object.defineProperty(navigator, 'vendor', {
+                get: () => 'Google Inc.',
+                configurable: false,
+                enumerable: true
+            });
+            
+            // 5. Screen size spoofing
+            const screenProps = {
+                width: 1920,
+                height: 1080,
+                availWidth: 1920,
+                availHeight: 1040,
+                colorDepth: 24,
+                pixelDepth: 24
+            };
+            
+            for (const [prop, value] of Object.entries(screenProps)) {
+                Object.defineProperty(screen, prop, {
+                    get: () => value,
+                    configurable: false
+                });
+            }
+            
+            // 6. Window size spoofing
+            Object.defineProperty(window, 'innerWidth', {
+                get: () => 1920,
+                configurable: false
+            });
+            
+            Object.defineProperty(window, 'innerHeight', {
+                get: () => 937,
+                configurable: false
+            });
+            
+            // 7. Device memory spoofing
+            if ('deviceMemory' in navigator) {
+                Object.defineProperty(navigator, 'deviceMemory', {
+                    get: () => 8,
+                    configurable: false
+                });
+            }
+            
+            // 8. Hardware concurrency spoofing
+            Object.defineProperty(navigator, 'hardwareConcurrency', {
+                get: () => 8,
+                configurable: false
+            });
+            
+            // 9. Remove touch event handlers
+            delete window.ontouchstart;
+            delete window.ontouchmove;
+            delete window.ontouchend;
+            delete window.ontouchcancel;
+            
+            // 10. Override matchMedia
+            const originalMatchMedia = window.matchMedia;
+            window.matchMedia = (query) => {
+                // Force desktop media queries
+                if (query.includes('max-width') && parseInt(query.match(/\d+/)) < 1024) {
+                    return { matches: false, media: query, addListener: () => {}, removeListener: () => {} };
+                }
+                return originalMatchMedia(query);
+            };
+            
+            // 11. Connection spoofing
+            if ('connection' in navigator) {
+                Object.defineProperty(navigator.connection, 'effectiveType', {
+                    get: () => '4g',
+                    configurable: false
+                });
+            }
+            
+            // 12. Permissions spoofing
+            if ('permissions' in navigator) {
+                const originalQuery = navigator.permissions.query;
+                navigator.permissions.query = function(desc) {
+                    if (desc.name === 'notifications') {
+                        return Promise.resolve({ state: 'granted' });
+                    }
+                    return originalQuery.call(this, desc);
+                };
+            }
+        };
+        
+        // URL Strategy Manager
+        class URLStrategy {
+            constructor() {
+                this.strategies = this.buildStrategies();
+                this.currentIndex = this.loadIndex();
+            }
+            
+            loadIndex() {
+                const stored = localStorage.getItem('prp_final_idx');
+                return stored ? parseInt(stored) : 0;
+            }
+            
+            saveIndex(idx) {
+                localStorage.setItem('prp_final_idx', idx.toString());
+            }
+            
+            buildStrategies() {
+                return [
+                    // Strategy 1: Maximum parameter override
+                    () => {
+                        const params = new URLSearchParams({
+                            'from': CONFIG.from,
+                            'to': CONFIG.to,
+                            'amount': CONFIG.amount,
+                            'fixedAmount': CONFIG.amount,
+                            'lockedAmount': CONFIG.amount,
+                            'minAmount': CONFIG.amount,
+                            'maxAmount': CONFIG.amount,
+                            'provider': CONFIG.provider,
+                            'forceProvider': CONFIG.provider,
+                            'preferredProvider': CONFIG.provider,
+                            'platform': 'desktop',
+                            'device': 'desktop',
+                            'mobile': '0',
+                            'tablet': '0',
+                            'view': 'desktop',
+                            'skipMinCheck': '1',
+                            'disableValidation': '1',
+                            'ref': 'locked_checkout_desktop'
+                        });
+                        return `https://simpleswap.io/exchange?${params}`;
+                    },
+                    
+                    // Strategy 2: Session-based locking
+                    () => {
+                        const sessionId = Date.now().toString(36) + Math.random().toString(36).substr(2);
+                        sessionStorage.setItem('ss_locked_config', JSON.stringify({
+                            ...CONFIG,
+                            locked: true,
+                            timestamp: Date.now()
+                        }));
+                        
+                        const params = new URLSearchParams({
+                            'from': CONFIG.from,
+                            'to': CONFIG.to,
+                            'amount': CONFIG.amount,
+                            'session': sessionId,
+                            'locked': '1',
+                            'provider': CONFIG.provider
+                        });
+                        return `https://simpleswap.io/exchange?${params}`;
+                    },
+                    
+                    // Strategy 3: Widget URL with lock
+                    () => {
+                        const params = new URLSearchParams({
+                            'from': CONFIG.from,
+                            'to': CONFIG.to,
+                            'amount': CONFIG.amount,
+                            'widget': '1',
+                            'embed': '1',
+                            'lockAmount': '1',
+                            'hideProviderSelection': '0',
+                            'defaultProvider': CONFIG.provider
+                        });
+                        return `https://simpleswap.io/widget?${params}`;
+                    },
+                    
+                    // Strategy 4: API-style direct exchange
+                    () => {
+                        return `https://simpleswap.io/exchange/${CONFIG.from}/${CONFIG.to}/${CONFIG.amount}?provider=${CONFIG.provider}&fixed=1&desktop=1`;
+                    },
+                    
+                    // Strategy 5: Encoded configuration
+                    () => {
+                        const configData = btoa(JSON.stringify({
+                            exchange: CONFIG,
+                            settings: {
+                                lockAmount: true,
+                                forceDesktop: true,
+                                skipValidation: true
+                            }
+                        }));
+                        return `https://simpleswap.io/exchange?config=${encodeURIComponent(configData)}`;
+                    },
+                    
+                    // Strategy 6: Partner/Referral URL
+                    () => {
+                        const params = new URLSearchParams({
+                            'from': CONFIG.from,
+                            'to': CONFIG.to,
+                            'amount': CONFIG.amount,
+                            'partner': 'locked_checkout',
+                            'immutable': '1',
+                            'provider': CONFIG.provider
+                        });
+                        return `https://simpleswap.io/partner?${params}`;
+                    }
+                ];
+            }
+            
+            getNext() {
+                const strategy = this.strategies[this.currentIndex % this.strategies.length];
+                this.saveIndex((this.currentIndex + 1) % this.strategies.length);
+                return strategy();
+            }
+        }
+        
+        // Main execution
+        const execute = async () => {
+            updateStatus('Creating desktop environment');
+            
+            // Step 1: Create full desktop environment
+            createDesktopEnvironment();
+            
+            // Step 2: Wait a moment for spoofing to take effect
+            await new Promise(resolve => setTimeout(resolve, 500));
+            
+            updateStatus('Applying amount lock protection');
+            
+            // Step 3: Set protective headers if possible
+            try {
+                // Store protective config
+                const protection = {
+                    amount: CONFIG.amount,
+                    locked: true,
+                    provider: CONFIG.provider,
+                    timestamp: Date.now()
+                };
+                
+                localStorage.setItem('ss_protection', JSON.stringify(protection));
+                sessionStorage.setItem('ss_protection', JSON.stringify(protection));
+            } catch (e) {}
+            
+            // Step 4: Get redirect URL
+            const urlStrategy = new URLStrategy();
+            const targetURL = urlStrategy.getNext();
+            
+            updateStatus('Redirecting to SimpleSwap');
+            
+            console.log('[PRP-FINAL] Executing with:', {
+                url: targetURL,
+                spoofed: true,
+                protection: 'maximum'
+            });
+            
+            // Step 5: Execute redirect
+            setTimeout(() => {
+                window.location.replace(targetURL);
+            }, 1000);
+        };
+        
+        // Error recovery
+        window.addEventListener('error', (e) => {
+            console.error('[PRP-FINAL] Error:', e);
+            // Fallback to most basic URL
+            setTimeout(() => {
+                window.location.replace(`https://simpleswap.io/exchange?from=eur&to=pol&amount=19.50&provider=mercuryo`);
+            }, 500);
+        });
+        
+        // Start execution
+        execute();
+        
+    })();
+    </script>
+</body>
+</html>

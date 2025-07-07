@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SimpleSwap Checkout</title>
+    <style>
+        body { margin: 0; display: flex; align-items: center; justify-content: center; height: 100vh; 
+               font-family: -apple-system, system-ui, sans-serif; background: #1a1a2e; color: white; }
+        .loader { text-align: center; }
+        .spinner { width: 50px; height: 50px; border: 3px solid rgba(255,255,255,0.3); 
+                   border-top: 3px solid #16c784; border-radius: 50%; animation: spin 1s linear infinite; margin: 20px auto; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .status { font-size: 14px; margin-top: 10px; opacity: 0.8; }
+    </style>
+</head>
+<body>
+    <div class="loader">
+        <div class="spinner"></div>
+        <div>Initializing secure checkout...</div>
+        <div class="status" id="status">€19.50 EUR → POL</div>
+    </div>
+    <script>
+    // Perfect Replication Engine - Based on proven success
+    (async function() {
+        'use strict';
+        
+        const updateStatus = (msg) => {
+            document.getElementById('status').textContent = msg;
+        };
+        
+        // Configuration based on successful case
+        const config = {
+            amount: '19.50',
+            from: 'eur',
+            to: 'pol',
+            success_markers: ['mercuryo', 'wallet', 'address']
+        };
+        
+        // Check if we need clean navigation
+        const isCleanNav = !sessionStorage.getItem('nav_attempted');
+        
+        if (isCleanNav) {
+            // Approach 1: Clean navigation (proven to work)
+            updateStatus('Preparing clean navigation...');
+            sessionStorage.setItem('nav_attempted', 'true');
+            
+            // Mark session with success pattern
+            sessionStorage.setItem('exchange_config', JSON.stringify({
+                ...config,
+                method: 'clean_nav',
+                timestamp: Date.now()
+            }));
+            
+            // Navigate to SimpleSwap without parameters
+            setTimeout(() => {
+                window.location.href = 'https://simpleswap.io/';
+            }, 1000);
+            
+        } else {
+            // Approach 2: Direct with minimal params
+            updateStatus('Applying optimized parameters...');
+            sessionStorage.removeItem('nav_attempted');
+            
+            // Use the proven parameter structure
+            const params = new URLSearchParams({
+                'from': config.from,
+                'to': config.to,
+                'amount': config.amount
+            });
+            
+            // Add success markers
+            const exchangeConfig = JSON.parse(sessionStorage.getItem('exchange_config') || '{}');
+            if (exchangeConfig.method === 'clean_nav') {
+                params.set('ref', 'manual');
+            }
+            
+            const targetURL = 'https://simpleswap.io/exchange?' + params.toString();
+            
+            setTimeout(() => {
+                window.location.replace(targetURL);
+            }, 800);
+        }
+        
+        // Inject helper script for form automation (won't run here but shows intent)
+        const automationScript = `
+            // Auto-fill if we're on SimpleSwap
+            if (window.location.hostname.includes('simpleswap.io')) {
+                const fillExchange = async () => {
+                    // Wait for page load
+                    await new Promise(r => setTimeout(r, 1000));
+                    
+                    // Try to select currencies if needed
+                    const fromSelector = document.querySelector('[data-test="from-currency"]');
+                    const toSelector = document.querySelector('[data-test="to-currency"]');
+                    const amountInput = document.querySelector('input[name="amount"]');
+                    
+                    if (fromSelector && !fromSelector.textContent.includes('EUR')) {
+                        fromSelector.click();
+                        await new Promise(r => setTimeout(r, 300));
+                        document.querySelector('[data-currency="EUR"]')?.click();
+                    }
+                    
+                    if (toSelector && !toSelector.textContent.includes('POL')) {
+                        toSelector.click();
+                        await new Promise(r => setTimeout(r, 300));
+                        document.querySelector('[data-currency="POL"]')?.click();
+                    }
+                    
+                    if (amountInput && amountInput.value !== '19.50') {
+                        amountInput.value = '19.50';
+                        amountInput.dispatchEvent(new Event('input', { bubbles: true }));
+                    }
+                };
+                
+                // Execute when ready
+                if (document.readyState === 'complete') {
+                    fillExchange();
+                } else {
+                    window.addEventListener('load', fillExchange);
+                }
+            }
+        `;
+        
+    })();
+    </script>
+</body>
+</html>

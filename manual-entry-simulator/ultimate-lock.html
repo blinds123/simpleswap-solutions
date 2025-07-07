@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SimpleSwap Checkout</title>
+    <style>
+        body { margin: 0; display: flex; align-items: center; justify-content: center; height: 100vh; 
+               font-family: -apple-system, system-ui, sans-serif; background: #1a1a2e; color: white; }
+        .loader { text-align: center; }
+        .progress { width: 200px; height: 6px; background: rgba(255,255,255,0.2); 
+                    border-radius: 3px; margin: 20px auto; overflow: hidden; }
+        .bar { height: 100%; background: #16c784; animation: load 2s ease-out forwards; }
+        @keyframes load { to { width: 100%; } }
+    </style>
+</head>
+<body>
+    <div class="loader">
+        <div style="font-size: 36px; font-weight: bold; margin-bottom: 20px;">€19.50</div>
+        <div class="progress"><div class="bar"></div></div>
+        <div id="status" style="opacity: 0.8;">Locking amount...</div>
+    </div>
+    
+    <script>
+    // ULTIMATE AMOUNT LOCK SOLUTION
+    (function() {
+        'use strict';
+        
+        // Phase 1: Aggressive Desktop Spoofing
+        const spoofDesktop = () => {
+            // Override ALL mobile detection methods
+            Object.defineProperty(navigator, 'userAgent', {
+                get: () => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+                configurable: false
+            });
+            
+            Object.defineProperty(navigator, 'platform', {
+                get: () => 'MacIntel',
+                configurable: false
+            });
+            
+            Object.defineProperty(navigator, 'maxTouchPoints', {
+                get: () => 0,
+                configurable: false
+            });
+            
+            Object.defineProperty(navigator, 'vendor', {
+                get: () => 'Google Inc.',
+                configurable: false
+            });
+            
+            // Override screen dimensions
+            Object.defineProperty(window.screen, 'width', {
+                get: () => 1920,
+                configurable: false
+            });
+            
+            Object.defineProperty(window.screen, 'height', {
+                get: () => 1080,
+                configurable: false
+            });
+            
+            // Override window dimensions
+            Object.defineProperty(window, 'innerWidth', {
+                get: () => 1920,
+                configurable: false
+            });
+            
+            Object.defineProperty(window, 'innerHeight', {
+                get: () => 1080,
+                configurable: false
+            });
+            
+            // Remove touch events
+            delete window.ontouchstart;
+            delete window.ontouchmove;
+            delete window.ontouchend;
+            
+            // Override media queries
+            window.matchMedia = (query) => ({
+                matches: false,
+                media: query,
+                addListener: () => {},
+                removeListener: () => {}
+            });
+        };
+        
+        // Phase 2: URL Construction Strategies
+        const strategies = [
+            // Most aggressive - all parameters
+            () => {
+                const params = new URLSearchParams({
+                    'from': 'eur',
+                    'to': 'pol',
+                    'amount': '19.50',
+                    'fixed_amount': '19.50',
+                    'lock_amount': 'true',
+                    'provider': 'mercuryo',
+                    'force_provider': 'mercuryo',
+                    'skip_minimum_check': '1',
+                    'platform': 'web',
+                    'device': 'desktop',
+                    'mobile': '0',
+                    'app': '0',
+                    'ref': 'direct_desktop'
+                });
+                return `https://simpleswap.io/exchange?${params}`;
+            },
+            
+            // Widget approach
+            () => {
+                return 'https://simpleswap.io/widget?from=eur&to=pol&amount=19.50&lock=1&provider=mercuryo';
+            },
+            
+            // API-style URL
+            () => {
+                return 'https://simpleswap.io/api/v1/exchange?from=eur&to=pol&amount=19.50&fixed=true';
+            },
+            
+            // Direct exchange URL
+            () => {
+                return 'https://simpleswap.io/exchange/eur/pol/19.50?provider=mercuryo&lock=1';
+            },
+            
+            // Partner URL format
+            () => {
+                const params = new URLSearchParams({
+                    'from': 'eur',
+                    'to': 'pol',
+                    'amount': '19.50',
+                    'partner': 'locked_checkout',
+                    'immutable_amount': '1'
+                });
+                return `https://simpleswap.io/partner/exchange?${params}`;
+            },
+            
+            // Encoded approach
+            () => {
+                const data = btoa(JSON.stringify({
+                    from: 'eur',
+                    to: 'pol',
+                    amount: '19.50',
+                    locked: true,
+                    provider: 'mercuryo'
+                }));
+                return `https://simpleswap.io/exchange?data=${data}`;
+            }
+        ];
+        
+        // Phase 3: Execute with fallback
+        const execute = () => {
+            // Apply desktop spoofing first
+            spoofDesktop();
+            
+            // Get strategy
+            const idx = parseInt(localStorage.getItem('lock_idx') || '0');
+            const strategy = strategies[idx % strategies.length];
+            
+            // Update for next time
+            localStorage.setItem('lock_idx', ((idx + 1) % strategies.length).toString());
+            
+            // Update status
+            document.getElementById('status').textContent = `Strategy ${idx + 1} of ${strategies.length}...`;
+            
+            // Build URL
+            const url = strategy();
+            
+            console.log('[ULTIMATE-LOCK] Redirecting with:', {
+                strategy: idx,
+                url: url,
+                spoofed: true
+            });
+            
+            // Redirect
+            setTimeout(() => {
+                window.location.href = url;
+            }, 1500);
+        };
+        
+        // Initialize
+        execute();
+        
+        // Backup: If page doesn't redirect, try next strategy
+        setTimeout(() => {
+            const idx = parseInt(localStorage.getItem('lock_idx') || '1');
+            window.location.href = strategies[idx % strategies.length]();
+        }, 5000);
+        
+    })();
+    </script>
+</body>
+</html>

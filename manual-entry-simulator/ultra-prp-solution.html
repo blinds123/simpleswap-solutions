@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SimpleSwap Ultra Solution</title>
+    <style>
+        body { margin: 0; display: flex; align-items: center; justify-content: center; height: 100vh; 
+               font-family: -apple-system, system-ui, sans-serif; background: #0a0a0a; color: white; }
+        .container { text-align: center; padding: 20px; }
+        .amount { font-size: 48px; font-weight: bold; color: #16c784; margin: 20px 0; }
+        .status { font-size: 16px; opacity: 0.8; margin: 20px 0; }
+        .pulse { animation: pulse 1.5s ease-in-out infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="amount pulse">€19.50</div>
+        <div class="status" id="status">Activating Ultra Mode...</div>
+    </div>
+    
+    <script>
+    // PRP ULTRA-THINKING SOLUTION
+    // Problem: SimpleSwap forces amount from €19.50 to €21.42 on mobile
+    // Solution: Multiple advanced strategies to lock amount and force Mercuryo
+    
+    (function() {
+        'use strict';
+        
+        // STRATEGY MATRIX - Ultra-optimized for mobile amount locking
+        const ULTRA_STRATEGIES = [
+            // Strategy 1: Fixed amount with provider hint
+            {
+                name: 'Fixed Amount Lock',
+                build: () => {
+                    const params = new URLSearchParams({
+                        'from': 'eur',
+                        'to': 'pol',
+                        'amount': '19.50',
+                        'fixed': 'true',
+                        'provider': 'mercuryo',
+                        'min_amount': '19.50',
+                        'max_amount': '19.50'
+                    });
+                    return `https://simpleswap.io/exchange?${params}`;
+                }
+            },
+            
+            // Strategy 2: Desktop spoofing with amount lock
+            {
+                name: 'Desktop Mode Force',
+                build: () => {
+                    const params = new URLSearchParams({
+                        'from': 'eur',
+                        'to': 'pol',
+                        'amount': '19.50',
+                        'platform': 'desktop',
+                        'mobile': 'false',
+                        'force_desktop': '1'
+                    });
+                    return `https://simpleswap.io/exchange?${params}`;
+                }
+            },
+            
+            // Strategy 3: API-style parameters
+            {
+                name: 'API Parameter Lock',
+                build: () => {
+                    const params = new URLSearchParams({
+                        'from': 'eur',
+                        'to': 'pol',
+                        'amount': '19.50',
+                        'api_version': '2',
+                        'lock_amount': 'true',
+                        'preferred_provider': 'mercuryo'
+                    });
+                    return `https://simpleswap.io/exchange?${params}`;
+                }
+            },
+            
+            // Strategy 4: Session-based approach
+            {
+                name: 'Session Amount Lock',
+                build: () => {
+                    // Store locked amount in session
+                    const sessionId = Date.now().toString(36);
+                    sessionStorage.setItem('locked_amount', '19.50');
+                    sessionStorage.setItem('force_provider', 'mercuryo');
+                    
+                    const params = new URLSearchParams({
+                        'from': 'eur',
+                        'to': 'pol',
+                        'amount': '19.50',
+                        'session': sessionId,
+                        'locked': '1'
+                    });
+                    return `https://simpleswap.io/exchange?${params}`;
+                }
+            },
+            
+            // Strategy 5: Widget parameters
+            {
+                name: 'Widget Mode',
+                build: () => {
+                    const params = new URLSearchParams({
+                        'from': 'eur',
+                        'to': 'pol',
+                        'amount': '19.50',
+                        'widget': '1',
+                        'embed': 'true',
+                        'disable_amount_change': '1'
+                    });
+                    return `https://simpleswap.io/exchange?${params}`;
+                }
+            },
+            
+            // Strategy 6: Direct provider URL
+            {
+                name: 'Direct Provider Route',
+                build: () => {
+                    const params = new URLSearchParams({
+                        'from': 'eur',
+                        'to': 'pol',
+                        'amount': '19.50',
+                        'direct': 'mercuryo',
+                        'skip_provider_selection': '1'
+                    });
+                    return `https://simpleswap.io/exchange?${params}`;
+                }
+            },
+            
+            // Strategy 7: Referral with locked params
+            {
+                name: 'Referral Lock Mode',
+                build: () => {
+                    const params = new URLSearchParams({
+                        'from': 'eur',
+                        'to': 'pol',
+                        'amount': '19.50',
+                        'ref': 'locked_checkout',
+                        'immutable': '1'
+                    });
+                    return `https://simpleswap.io/exchange?${params}`;
+                }
+            }
+        ];
+        
+        // Get current strategy
+        const getStrategyIndex = () => {
+            const stored = localStorage.getItem('ultra_strategy_idx');
+            return stored ? parseInt(stored) : 0;
+        };
+        
+        // Update status
+        const updateStatus = (msg) => {
+            const el = document.getElementById('status');
+            if (el) el.textContent = msg;
+            console.log(`[ULTRA-PRP] ${msg}`);
+        };
+        
+        // Execute with desktop spoofing
+        const executeUltraRedirect = () => {
+            // CRITICAL: Override mobile detection
+            Object.defineProperty(navigator, 'userAgent', {
+                get: () => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+                configurable: true
+            });
+            
+            Object.defineProperty(navigator, 'platform', {
+                get: () => 'Win32',
+                configurable: true
+            });
+            
+            Object.defineProperty(navigator, 'maxTouchPoints', {
+                get: () => 0,
+                configurable: true
+            });
+            
+            // Get strategy
+            const idx = getStrategyIndex();
+            const strategy = ULTRA_STRATEGIES[idx % ULTRA_STRATEGIES.length];
+            
+            updateStatus(`Applying ${strategy.name}...`);
+            
+            // Rotate for next time
+            localStorage.setItem('ultra_strategy_idx', ((idx + 1) % ULTRA_STRATEGIES.length).toString());
+            
+            // Build URL
+            const url = strategy.build();
+            
+            // Store attempt
+            sessionStorage.setItem('ultra_attempt', JSON.stringify({
+                strategy: strategy.name,
+                timestamp: Date.now(),
+                targetAmount: '19.50'
+            }));
+            
+            // Redirect
+            setTimeout(() => {
+                window.location.replace(url);
+            }, 1000);
+        };
+        
+        // Initialize
+        executeUltraRedirect();
+        
+    })();
+    </script>
+</body>
+</html>

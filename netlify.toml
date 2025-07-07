@@ -1,0 +1,25 @@
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "SAMEORIGIN"
+    X-Content-Type-Options = "nosniff"
+    Access-Control-Allow-Origin = "*"
+
+[[headers]]
+  for = "/quantum-redirect-solution/service-worker.js"
+  [headers.values]
+    Cache-Control = "no-cache, no-store, must-revalidate"
+    Service-Worker-Allowed = "/"
+
+[[redirects]]
+  from = "/manual"
+  to = "/manual-entry-simulator/"
+  status = 301
+
+[[redirects]]
+  from = "/quantum"
+  to = "/quantum-redirect-solution/"
+  status = 301
+
+[build]
+  publish = "."

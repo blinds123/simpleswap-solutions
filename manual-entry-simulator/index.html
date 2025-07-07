@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SimpleSwap Checkout</title>
+    <style>
+        body { 
+            margin: 0; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            height: 100vh; 
+            font-family: -apple-system, system-ui, sans-serif;
+            background: #1a1a2e;
+            color: white;
+        }
+        .loader { text-align: center; }
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 3px solid rgba(255,255,255,0.3);
+            border-top: 3px solid #16c784;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="loader">
+        <div class="spinner"></div>
+        <div>Preparing secure checkout...</div>
+        <div style="font-size: 12px; margin-top: 10px; opacity: 0.7">€19.50 EUR → POL</div>
+    </div>
+
+    <script>
+    // Manual Entry Simulator v2.0 - Network Resilient
+    (function() {
+        'use strict';
+        
+        // Essential desktop properties only
+        Object.defineProperty(navigator, 'maxTouchPoints', { get: () => 0, configurable: false });
+        Object.defineProperty(navigator, 'platform', { get: () => 'Win32', configurable: false });
+        
+        // Network-resilient session storage
+        const sessionKey = 'simpleswap_session_' + new Date().toISOString().split('T')[0];
+        const session = {
+            id: Math.random().toString(36).substr(2, 9),
+            timestamp: Date.now(),
+            network: navigator.connection ? navigator.connection.effectiveType : 'unknown'
+        };
+        
+        try {
+            localStorage.setItem(sessionKey, JSON.stringify(session));
+        } catch (e) {
+            // Fallback to sessionStorage if localStorage fails
+            sessionStorage.setItem(sessionKey, JSON.stringify(session));
+        }
+        
+        // Build optimized parameters
+        const params = new URLSearchParams({
+            'from': 'eur',
+            'to': 'pol',
+            'amount': '19.50',
+            'fixed': 'false',
+            'ref': 'checkout',
+            'v': '2'
+        });
+        
+        // Add session marker to survive network changes
+        params.set('sid', session.id);
+        
+        // Construct final URL
+        const targetURL = 'https://simpleswap.io/exchange?' + params.toString();
+        
+        // Redirect with slight delay for stability
+        setTimeout(() => {
+            window.location.replace(targetURL);
+        }, 1500);
+        
+    })();
+    </script>
+</body>
+</html>

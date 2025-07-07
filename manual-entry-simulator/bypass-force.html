@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SimpleSwap Direct</title>
+    <style>
+        body { margin: 0; padding: 0; overflow: hidden; }
+        iframe { width: 100vw; height: 100vh; border: none; }
+        .overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; 
+                   background: #1a1a2e; color: white; display: flex; 
+                   align-items: center; justify-content: center; z-index: 9999; }
+        .content { text-align: center; }
+        .amount { font-size: 48px; font-weight: bold; color: #16c784; }
+    </style>
+</head>
+<body>
+    <div class="overlay" id="overlay">
+        <div class="content">
+            <div class="amount">€19.50</div>
+            <div style="margin-top: 20px;">Bypassing amount forcing...</div>
+        </div>
+    </div>
+    
+    <iframe id="frame" style="display: none;"></iframe>
+    
+    <script>
+    // BYPASS FORCE SOLUTION - Iframe Manipulation
+    (function() {
+        'use strict';
+        
+        const TARGET_AMOUNT = '19.50';
+        const MERCURYO_SELECTOR = '[data-provider="mercuryo"], .mercuryo, #mercuryo';
+        
+        // Method 1: Direct iframe injection
+        const method1 = () => {
+            const frame = document.getElementById('frame');
+            frame.style.display = 'block';
+            
+            // Start with base URL
+            frame.src = 'https://simpleswap.io/';
+            
+            frame.onload = function() {
+                try {
+                    const doc = frame.contentDocument || frame.contentWindow.document;
+                    
+                    // Wait a bit for page to load
+                    setTimeout(() => {
+                        // Try to manipulate the form directly
+                        const script = doc.createElement('script');
+                        script.textContent = `
+                            // Force amount to stay at 19.50
+                            setInterval(() => {
+                                const amountInputs = document.querySelectorAll('input[type="number"], input[name="amount"], .amount-input');
+                                amountInputs.forEach(input => {
+                                    if (input.value !== '${TARGET_AMOUNT}') {
+                                        input.value = '${TARGET_AMOUNT}';
+                                        input.dispatchEvent(new Event('input', { bubbles: true }));
+                                        input.dispatchEvent(new Event('change', { bubbles: true }));
+                                    }
+                                });
+                                
+                                // Force Mercuryo selection
+                                const mercuryoBtn = document.querySelector('${MERCURYO_SELECTOR}');
+                                if (mercuryoBtn && !mercuryoBtn.classList.contains('selected')) {
+                                    mercuryoBtn.click();
+                                }
+                            }, 100);
+                            
+                            // Navigate to exchange
+                            setTimeout(() => {
+                                window.location.href = '/exchange?from=eur&to=pol&amount=${TARGET_AMOUNT}';
+                            }, 1000);
+                        `;
+                        doc.head.appendChild(script);
+                    }, 1000);
+                } catch (e) {
+                    // Cross-origin, fallback to method 2
+                    method2();
+                }
+            };
+            
+            // Hide overlay after a delay
+            setTimeout(() => {
+                document.getElementById('overlay').style.display = 'none';
+            }, 2000);
+        };
+        
+        // Method 2: PostMessage manipulation
+        const method2 = () => {
+            // Create hidden iframe
+            const frame = document.createElement('iframe');
+            frame.style.position = 'fixed';
+            frame.style.top = '-9999px';
+            frame.src = 'https://simpleswap.io/exchange?from=eur&to=pol';
+            document.body.appendChild(frame);
+            
+            // Send messages to force amount
+            const interval = setInterval(() => {
+                frame.contentWindow.postMessage({
+                    type: 'SET_AMOUNT',
+                    amount: TARGET_AMOUNT,
+                    lock: true
+                }, '*');
+                
+                frame.contentWindow.postMessage({
+                    type: 'SELECT_PROVIDER',
+                    provider: 'mercuryo'
+                }, '*');
+            }, 100);
+            
+            // After 3 seconds, redirect with locked parameters
+            setTimeout(() => {
+                clearInterval(interval);
+                window.location.href = 'https://simpleswap.io/exchange?from=eur&to=pol&amount=19.50&locked=1&provider=mercuryo';
+            }, 3000);
+        };
+        
+        // Method 3: Form submission bypass
+        const method3 = () => {
+            // Create a form that submits directly
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = 'https://simpleswap.io/api/create-exchange';
+            form.style.display = 'none';
+            
+            const fields = {
+                'currency_from': 'eur',
+                'currency_to': 'pol',
+                'amount': TARGET_AMOUNT,
+                'fixed_amount': 'true',
+                'provider': 'mercuryo',
+                'skip_validation': '1'
+            };
+            
+            for (const [name, value] of Object.entries(fields)) {
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = name;
+                input.value = value;
+                form.appendChild(input);
+            }
+            
+            document.body.appendChild(form);
+            
+            // Try to submit
+            setTimeout(() => {
+                try {
+                    form.submit();
+                } catch (e) {
+                    // Fallback to GET request
+                    window.location.href = 'https://simpleswap.io/exchange?' + new URLSearchParams(fields);
+                }
+            }, 1000);
+        };
+        
+        // Method 4: LocalStorage manipulation
+        const method4 = () => {
+            // Set locked values in storage
+            const config = {
+                exchange: {
+                    from: 'eur',
+                    to: 'pol',
+                    amount: TARGET_AMOUNT,
+                    locked: true,
+                    provider: 'mercuryo'
+                },
+                settings: {
+                    force_desktop: true,
+                    disable_amount_validation: true,
+                    skip_minimum_check: true
+                }
+            };
+            
+            localStorage.setItem('simpleswap_config', JSON.stringify(config));
+            localStorage.setItem('locked_amount', TARGET_AMOUNT);
+            localStorage.setItem('force_provider', 'mercuryo');
+            
+            // Redirect with session reference
+            const sessionId = Date.now().toString(36);
+            window.location.href = `https://simpleswap.io/exchange?from=eur&to=pol&amount=${TARGET_AMOUNT}&session=${sessionId}&restore=1`;
+        };
+        
+        // Execute methods in sequence
+        const methods = [method4, method1, method2, method3];
+        const methodIndex = parseInt(localStorage.getItem('bypass_method') || '0');
+        
+        localStorage.setItem('bypass_method', ((methodIndex + 1) % methods.length).toString());
+        
+        // Execute current method
+        methods[methodIndex % methods.length]();
+        
+    })();
+    </script>
+</body>
+</html>
