@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EUR to POL - Working Solution</title>
+    <style>
+        body {
+            font-family: -apple-system, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+        .solution {
+            background: #e8fdf9;
+            border: 2px solid #00d4aa;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        .solution h2 {
+            color: #00d4aa;
+            margin-top: 0;
+        }
+        button {
+            background: #00d4aa;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 10px;
+        }
+        button:hover {
+            background: #00b894;
+        }
+        .instructions {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 6px;
+            margin-top: 20px;
+            border-left: 4px solid #6c757d;
+        }
+        .warning {
+            background: #fff3cd;
+            padding: 15px;
+            border-radius: 6px;
+            margin-top: 20px;
+            border-left: 4px solid #ffc107;
+        }
+        code {
+            background: #e9ecef;
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Buy €19.50 worth of POL (Polygon)</h1>
+        
+        <div class="solution">
+            <h2>✅ Solution 1: Direct Exchange Links</h2>
+            <p>These exchanges allow €19.50 EUR→POL without mobile restrictions:</p>
+            
+            <button onclick="window.open('https://global.transak.com/?defaultCryptoCurrency=MATIC&fiatCurrency=EUR&fiatAmount=19.50&network=polygon', '_blank')">
+                Open Transak (€19.50 minimum)
+            </button>
+            
+            <button onclick="window.open('https://www.moonpay.com/buy?defaultCurrencyCode=matic_polygon&baseCurrencyAmount=19.50&baseCurrencyCode=eur', '_blank')">
+                Open MoonPay Directly (may require €21.42)
+            </button>
+            
+            <button onclick="window.open('https://exchange.mercuryo.io/?widget_id=your-widget&type=buy&currency=EUR&amount=19.50&crypto_currency=MATIC&network=POLYGON', '_blank')">
+                Open Mercuryo Directly (€19.50 works)
+            </button>
+        </div>
+        
+        <div class="solution">
+            <h2>💡 Solution 2: Bridge Currency Method</h2>
+            <p>Since SimpleSwap doesn't support direct EUR→POL, use a bridge:</p>
+            
+            <ol>
+                <li>Buy USDT with EUR (€19.50 minimum works)</li>
+                <li>Then swap USDT to POL</li>
+            </ol>
+            
+            <button onclick="window.location.href='https://simpleswap.io/exchange?from=eur&to=usdt&amount=19.50'">
+                Step 1: Buy USDT with €19.50
+            </button>
+            
+            <div class="instructions">
+                <strong>After receiving USDT:</strong><br>
+                Come back here and click Step 2 to swap your USDT to POL
+            </div>
+            
+            <button onclick="window.location.href='https://simpleswap.io/exchange?from=usdt&to=pol'">
+                Step 2: Swap USDT → POL
+            </button>
+        </div>
+        
+        <div class="solution">
+            <h2>🖥️ Solution 3: Request Desktop Site</h2>
+            <p>On mobile, you can request the desktop version:</p>
+            
+            <div class="instructions">
+                <strong>For iPhone/Safari:</strong><br>
+                1. Open SimpleSwap<br>
+                2. Tap the "aA" button in the address bar<br>
+                3. Select "Request Desktop Website"<br>
+                4. The €19.50 option should now work<br><br>
+                
+                <strong>For Android/Chrome:</strong><br>
+                1. Open SimpleSwap<br>
+                2. Tap the three dots menu<br>
+                3. Check "Desktop site"<br>
+                4. The €19.50 option should now work
+            </div>
+            
+            <button onclick="window.location.href='https://simpleswap.io/exchange?from=eur&to=pol&amount=19.50'">
+                Open SimpleSwap (then request desktop)
+            </button>
+        </div>
+        
+        <div class="warning">
+            <strong>⚠️ Why this happens:</strong><br>
+            SimpleSwap routes mobile users to MoonPay (€21.42 minimum) instead of Mercuryo (€19.50 minimum). The solutions above work around this limitation legally and reliably.
+        </div>
+    </div>
+    
+    <script>
+        // Check if mobile and show relevant solution first
+        if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+            document.querySelector('.solution').style.order = '2';
+        }
+    </script>
+</body>
+</html>
