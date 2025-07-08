@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solution #5: Double Encoding</title>
+</head>
+<body>
+    <script>
+    // Solution 5: Double encode parameters to bypass validation
+    const params = {
+        from: 'eur',
+        to: 'pol',
+        amount: '19.50'
+    };
+    
+    // Double encode the amount
+    const encodedAmount = encodeURIComponent(encodeURIComponent('19.50'));
+    
+    // Create URL with mixed encoding
+    window.location.href = `https://simpleswap.io/exchange?from=eur&to=pol&amount=${encodedAmount}&decode=2&provider=mercuryo`;
+    </script>
+</body>
+</html>

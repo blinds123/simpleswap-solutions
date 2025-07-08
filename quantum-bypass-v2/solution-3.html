@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solution #3: Session Pre-Lock</title>
+</head>
+<body>
+    <script>
+    // Solution 3: Create a locked session before redirect
+    const sessionId = Date.now().toString(36);
+    const lockedData = btoa(JSON.stringify({
+        amount: '19.50',
+        from: 'eur',
+        to: 'pol',
+        provider: 'mercuryo',
+        locked: true,
+        mobile_override: true
+    }));
+    
+    // Try to set session data
+    localStorage.setItem('simpleswap_locked_' + sessionId, lockedData);
+    sessionStorage.setItem('simpleswap_locked_' + sessionId, lockedData);
+    
+    // Redirect with session reference
+    window.location.href = `https://simpleswap.io/exchange?session=${sessionId}&data=${lockedData}&restore=1`;
+    </script>
+</body>
+</html>

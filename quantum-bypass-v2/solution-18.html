@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solution #18: Error Page Exploit</title>
+</head>
+<body>
+    <script>
+    // Solution 18: Use error recovery URL with pre-filled data
+    window.location.href = 'https://simpleswap.io/error?retry=1&from=eur&to=pol&amount=19.50&provider=mercuryo&error_code=AMOUNT_INVALID&override=1';
+    </script>
+</body>
+</html>

@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test All Solutions</title>
+    <style>
+        body {
+            font-family: -apple-system, sans-serif;
+            background: #0a0e27;
+            color: white;
+            padding: 20px;
+            margin: 0;
+        }
+        h1 {
+            text-align: center;
+            color: #00ff88;
+        }
+        .controls {
+            text-align: center;
+            margin: 30px 0;
+        }
+        button {
+            background: #00ff88;
+            color: #0a0e27;
+            border: none;
+            padding: 12px 30px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            margin: 0 10px;
+        }
+        .solution-list {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .solution-item {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .test-btn {
+            background: #4a5568;
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+        #current-test {
+            text-align: center;
+            font-size: 24px;
+            margin: 30px 0;
+            color: #00ff88;
+        }
+    </style>
+</head>
+<body>
+    <h1>Test All 20 Solutions</h1>
+    
+    <div class="controls">
+        <button onclick="startSequentialTest()">Test All Sequentially</button>
+        <button onclick="openAllInTabs()">Open All in Tabs</button>
+    </div>
+    
+    <div id="current-test"></div>
+    
+    <div class="solution-list">
+        <div class="solution-item">
+            <span>Solution #1: Provider Lock First</span>
+            <button class="test-btn" onclick="testSolution(1)">Test</button>
+        </div>
+        <div class="solution-item">
+            <span>Solution #2: Widget API Exploit</span>
+            <button class="test-btn" onclick="testSolution(2)">Test</button>
+        </div>
+        <div class="solution-item">
+            <span>Solution #3: Session Pre-Lock</span>
+            <button class="test-btn" onclick="testSolution(3)">Test</button>
+        </div>
+        <div class="solution-item">
+            <span>Solution #4: Affiliate Override</span>
+            <button class="test-btn" onclick="testSolution(4)">Test</button>
+        </div>
+        <div class="solution-item">
+            <span>Solution #5: Double Encoding</span>
+            <button class="test-btn" onclick="testSolution(5)">Test</button>
+        </div>
+        <div class="solution-item">
+            <span>Solution #6: Cache Exploit</span>
+            <button class="test-btn" onclick="testSolution(6)">Test</button>
+        </div>
+        <div class="solution-item">
+            <span>Solution #7: Regional Bypass</span>
+            <button class="test-btn" onclick="testSolution(7)">Test</button>
+        </div>
+        <div class="solution-item">
+            <span>Solution #8: Timing Attack</span>
+            <button class="test-btn" onclick="testSolution(8)">Test</button>
+        </div>
+        <div class="solution-item">
+            <span>Solution #9: Direct Checkout</span>
+            <button class="test-btn" onclick="testSolution(9)">Test</button>
+        </div>
+        <div class="solution-item">
+            <span>Solution #10: Fragment Hiding</span>
+            <button class="test-btn" onclick="testSolution(10)">Test</button>
+        </div>
+        <div class="solution-item">
+            <span>Solution #11: Business Mode</span>
+            <button class="test-btn" onclick="testSolution(11)">Test</button>
+        </div>
+        <div class="solution-item">
+            <span>Solution #12: Legacy API</span>
+            <button class="test-btn" onclick="testSolution(12)">Test</button>
+        </div>
+        <div class="solution-item">
+            <span>Solution #13: Mobile App Link</span>
+            <button class="test-btn" onclick="testSolution(13)">Test</button>
+        </div>
+        <div class="solution-item">
+            <span>Solution #14: Amount Format Trick</span>
+            <button class="test-btn" onclick="testSolution(14)">Test</button>
+        </div>
+        <div class="solution-item">
+            <span>Solution #15: Test Mode</span>
+            <button class="test-btn" onclick="testSolution(15)">Test</button>
+        </div>
+        <div class="solution-item">
+            <span>Solution #16: Reverse Order</span>
+            <button class="test-btn" onclick="testSolution(16)">Test</button>
+        </div>
+        <div class="solution-item">
+            <span>Solution #17: Multi-Redirect</span>
+            <button class="test-btn" onclick="testSolution(17)">Test</button>
+        </div>
+        <div class="solution-item">
+            <span>Solution #18: Error Page Exploit</span>
+            <button class="test-btn" onclick="testSolution(18)">Test</button>
+        </div>
+        <div class="solution-item">
+            <span>Solution #19: Admin Preview</span>
+            <button class="test-btn" onclick="testSolution(19)">Test</button>
+        </div>
+        <div class="solution-item">
+            <span>Solution #20: Quantum Combo</span>
+            <button class="test-btn" onclick="testSolution(20)">Test</button>
+        </div>
+    </div>
+    
+    <script>
+        function testSolution(num) {
+            window.open(`solution-${num}.html`, '_blank');
+        }
+        
+        function openAllInTabs() {
+            if (confirm('This will open 20 tabs. Continue?')) {
+                for (let i = 1; i <= 20; i++) {
+                    setTimeout(() => {
+                        window.open(`solution-${i}.html`, '_blank');
+                    }, i * 500); // Delay to prevent browser blocking
+                }
+            }
+        }
+        
+        let currentTest = 0;
+        function startSequentialTest() {
+            currentTest = 1;
+            testNext();
+        }
+        
+        function testNext() {
+            if (currentTest <= 20) {
+                document.getElementById('current-test').textContent = `Testing Solution #${currentTest}...`;
+                window.open(`solution-${currentTest}.html`, 'test-window');
+                currentTest++;
+                setTimeout(testNext, 5000); // 5 seconds per test
+            } else {
+                document.getElementById('current-test').textContent = 'All tests completed!';
+            }
+        }
+    </script>
+</body>
+</html>

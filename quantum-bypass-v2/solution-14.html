@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solution #14: Amount Format Trick</title>
+</head>
+<body>
+    <script>
+    // Solution 14: Send amount in different formats to confuse validation
+    const formats = [
+        '19.50',
+        '19,50',
+        '19.5',
+        '19.500',
+        '0019.50',
+        '1950e-2',
+        '19.50EUR',
+        '€19.50'
+    ];
+    
+    const randomFormat = formats[Math.floor(Math.random() * formats.length)];
+    window.location.href = `https://simpleswap.io/exchange?from=eur&to=pol&amount=${randomFormat}&amount_format=custom&parse_amount=1`;
+    </script>
+</body>
+</html>

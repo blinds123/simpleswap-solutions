@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solution #13: Mobile App Link</title>
+</head>
+<body>
+    <script>
+    // Solution 13: Use mobile app deeplink format with desktop parameters
+    window.location.href = 'simpleswap://exchange?from=eur&to=pol&amount=19.50&provider=mercuryo&platform=desktop&app_version=99.0.0';
+    
+    // Fallback to web version
+    setTimeout(() => {
+        window.location.href = 'https://simpleswap.io/exchange?from=eur&to=pol&amount=19.50&deeplink=1&app_redirect=1';
+    }, 1000);
+    </script>
+</body>
+</html>

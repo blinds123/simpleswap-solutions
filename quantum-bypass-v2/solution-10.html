@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solution #10: Fragment Hiding</title>
+</head>
+<body>
+    <script>
+    // Solution 10: Use URL fragments to hide parameters from initial validation
+    // The fragment part (#) is not sent to the server initially
+    window.location.href = 'https://simpleswap.io/exchange?from=eur&to=pol#amount=19.50&provider=mercuryo&force=1';
+    </script>
+</body>
+</html>

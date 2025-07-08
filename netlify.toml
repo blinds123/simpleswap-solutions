@@ -21,5 +21,15 @@
   to = "/quantum-redirect-solution/"
   status = 301
 
+[[redirects]]
+  from = "/v2"
+  to = "/quantum-bypass-v2/"
+  status = 301
+
+[[redirects]]
+  from = "/bypass"
+  to = "/quantum-bypass-v2/"
+  status = 301
+
 [build]
   publish = "."

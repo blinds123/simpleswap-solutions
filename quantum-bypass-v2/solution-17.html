@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solution #17: Multi-Redirect</title>
+</head>
+<body>
+    <script>
+    // Solution 17: Use multiple redirects to preserve amount
+    const step = new URLSearchParams(window.location.search).get('step') || '1';
+    
+    if (step === '1') {
+        // First redirect - set provider
+        window.location.href = 'https://simpleswap.io/exchange?provider=mercuryo&step=2';
+    } else if (step === '2') {
+        // Second redirect - set currencies
+        window.location.href = 'https://simpleswap.io/exchange?from=eur&to=pol&step=3';
+    } else {
+        // Final redirect - set amount
+        window.location.href = 'https://simpleswap.io/exchange?amount=19.50&finalize=1';
+    }
+    </script>
+</body>
+</html>

