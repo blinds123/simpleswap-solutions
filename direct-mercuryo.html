@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Direct EUR to POL Checkout - €19.50</title>
+    <style>
+        body {
+            font-family: -apple-system, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f5f5f5;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+        .price {
+            font-size: 36px;
+            color: #00d4aa;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+        .option {
+            border: 2px solid #eee;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .option:hover {
+            border-color: #00d4aa;
+            background: #f9fffe;
+        }
+        .option h3 {
+            margin: 0 0 10px 0;
+            color: #333;
+        }
+        .option p {
+            margin: 5px 0;
+            color: #666;
+            font-size: 14px;
+        }
+        .recommended {
+            background: #e8fdf9;
+            border-color: #00d4aa;
+        }
+        .recommended::before {
+            content: "RECOMMENDED";
+            background: #00d4aa;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: bold;
+            display: inline-block;
+            margin-bottom: 10px;
+        }
+        button {
+            background: #00d4aa;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 10px;
+        }
+        button:hover {
+            background: #00b894;
+        }
+        .info {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 6px;
+            margin-top: 20px;
+            font-size: 14px;
+            color: #666;
+        }
+        #mercuryo-widget {
+            margin-top: 20px;
+            min-height: 600px;
+        }
+        .alternative {
+            color: #0066cc;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .alternative:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Buy POL (Polygon)</h1>
+        <div class="price">€19.50</div>
+        
+        <div id="options">
+            <div class="option recommended" onclick="loadMercuryoDirect()">
+                <h3>Direct Mercuryo Checkout</h3>
+                <p>✓ Accepts €19.50 minimum</p>
+                <p>✓ No price increase on mobile</p>
+                <p>✓ Instant processing</p>
+                <p>✓ Multiple payment methods</p>
+                <button>Start Checkout with Mercuryo</button>
+            </div>
+            
+            <div class="option" onclick="loadSimpleSwapDesktop()">
+                <h3>SimpleSwap Desktop Mode</h3>
+                <p>✓ Forces desktop experience</p>
+                <p>✓ Shows all providers</p>
+                <p>✓ May still show €21.42 on some devices</p>
+                <button>Try SimpleSwap Desktop</button>
+            </div>
+            
+            <div class="option" onclick="showAlternatives()">
+                <h3>Alternative Exchanges</h3>
+                <p>✓ Other exchanges without mobile restrictions</p>
+                <p>✓ Competitive rates</p>
+                <p>✓ Various minimum amounts</p>
+                <button>View Alternatives</button>
+            </div>
+        </div>
+        
+        <div id="mercuryo-widget" style="display:none;"></div>
+        
+        <div id="alternatives" style="display:none;">
+            <h3>Alternative Exchanges:</h3>
+            <p><a href="https://global.transak.com/?fiatCurrency=EUR&cryptoCurrency=POL&defaultFiatAmount=19.50" class="alternative" target="_blank">Transak - Direct EUR to POL</a></p>
+            <p><a href="https://ramp.network/buy/?hostApiKey=YOUR_KEY&swapAsset=POLYGON_POL&fiatCurrency=EUR&fiatValue=19.50" class="alternative" target="_blank">Ramp Network - Low minimums</a></p>
+            <p><a href="https://www.mtpelerin.com/buy-pol" class="alternative" target="_blank">Mt Pelerin - Swiss exchange</a></p>
+            <p><a href="https://guardarian.com/calculators/eur-pol" class="alternative" target="_blank">Guardarian - No mobile discrimination</a></p>
+        </div>
+        
+        <div class="info">
+            <strong>Why €19.50?</strong> SimpleSwap increases the minimum to €21.42 on mobile devices by routing to MoonPay. We provide direct access to Mercuryo which accepts €19.50 on all devices.
+        </div>
+    </div>
+    
+    <script>
+        function loadMercuryoDirect() {
+            // Hide options, show widget
+            document.getElementById('options').style.display = 'none';
+            document.getElementById('mercuryo-widget').style.display = 'block';
+            
+            // Method 1: Direct Mercuryo URL (no widget needed)
+            window.location.href = 'https://exchange.mercuryo.io/?currency=EUR&fiat_amount=19.50&cryptocurrency=POL&widget_id=simpleswap';
+            
+            // Method 2: If you have Mercuryo widget access
+            // loadMercuryoWidget();
+        }
+        
+        function loadMercuryoWidget() {
+            // This would load the actual Mercuryo widget if you have partner access
+            const script = document.createElement('script');
+            script.src = 'https://widget.mercuryo.io/embed.js';
+            script.onload = function() {
+                window.mercuryoWidget.run({
+                    widgetId: 'YOUR_WIDGET_ID',
+                    container: 'mercuryo-widget',
+                    fiatCurrency: 'EUR',
+                    fiatAmount: '19.50',
+                    cryptoCurrency: 'POL'
+                });
+            };
+            document.body.appendChild(script);
+        }
+        
+        function loadSimpleSwapDesktop() {
+            // Create a form to POST to SimpleSwap (sometimes works better than GET)
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = 'https://simpleswap.io/exchange';
+            form.target = '_blank';
+            
+            const fields = {
+                'from': 'eur',
+                'to': 'pol',
+                'amount': '19.50'
+            };
+            
+            for (const [key, value] of Object.entries(fields)) {
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = key;
+                input.value = value;
+                form.appendChild(input);
+            }
+            
+            document.body.appendChild(form);
+            form.submit();
+            document.body.removeChild(form);
+        }
+        
+        function showAlternatives() {
+            document.getElementById('options').style.display = 'none';
+            document.getElementById('alternatives').style.display = 'block';
+        }
+        
+        // Check if we can detect and inform user
+        if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+            const info = document.querySelector('.info');
+            info.innerHTML += '<br><br><strong>Mobile detected:</strong> We recommend using the Direct Mercuryo option to ensure €19.50 pricing.';
+        }
+    </script>
+</body>
+</html>
