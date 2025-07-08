@@ -2,104 +2,92 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=1024">
-    <title>SimpleSwap Desktop Mode</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SimpleSwap Desktop Mode Redirect</title>
     <style>
         body {
             font-family: -apple-system, sans-serif;
             margin: 0;
             padding: 0;
-            background: #f5f5f5;
-        }
-        .notice {
-            background: #00d4aa;
+            background: #0a0e27;
             color: white;
-            padding: 15px;
-            text-align: center;
-            font-weight: bold;
-        }
-        iframe {
-            width: 100%;
-            height: calc(100vh - 50px);
-            border: none;
-        }
-        .loading {
+            min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            height: 100vh;
-            font-size: 24px;
-            color: #666;
         }
-        .error {
+        .container {
             text-align: center;
-            padding: 50px;
+            max-width: 500px;
+            padding: 20px;
         }
-        .error h1 {
-            color: #e74c3c;
+        h1 {
+            font-size: 60px;
+            color: #00ff88;
+            margin: 0;
         }
-        .button {
+        .loading {
+            font-size: 24px;
+            margin: 30px 0;
+        }
+        .dots {
             display: inline-block;
-            background: #00d4aa;
-            color: white;
+            animation: dots 1.5s infinite;
+        }
+        @keyframes dots {
+            0%, 20% { content: '.'; }
+            40% { content: '..'; }
+            60%, 100% { content: '...'; }
+        }
+        .info {
+            background: rgba(255,255,255,0.05);
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 30px;
+        }
+        .manual {
+            margin-top: 30px;
+            opacity: 0.8;
+        }
+        a {
+            color: #00ff88;
             text-decoration: none;
-            padding: 12px 30px;
-            border-radius: 6px;
-            font-weight: bold;
-            margin: 10px;
+        }
+        a:hover {
+            text-decoration: underline;
         }
     </style>
 </head>
 <body>
-    <div class="notice">
-        Desktop Mode Active - €19.50 EUR → POL should work correctly
-    </div>
-    
-    <div id="content">
-        <div class="loading">Loading SimpleSwap in desktop mode...</div>
+    <div class="container">
+        <h1>€19.50</h1>
+        <div class="loading">
+            Redirecting to SimpleSwap<span class="dots">...</span>
+        </div>
+        
+        <div class="info">
+            <strong>Mobile Users:</strong><br>
+            After redirect, request desktop site in your browser menu to access €19.50 option
+        </div>
+        
+        <div class="manual">
+            Not redirecting? <a href="https://simpleswap.io/exchange?from=eur&to=pol&amount=19.50">Click here</a>
+        </div>
     </div>
     
     <script>
-        // Force desktop viewport
-        document.querySelector('meta[name="viewport"]').setAttribute('content', 'width=1024');
-        
-        // Try to load in iframe first
+        // Immediate redirect with desktop hints
         setTimeout(() => {
-            const content = document.getElementById('content');
-            
-            // Create iframe
-            const iframe = document.createElement('iframe');
-            iframe.src = 'https://simpleswap.io/exchange?from=eur&to=pol&amount=19.50';
-            iframe.onerror = function() {
-                // If iframe fails, redirect directly
-                window.location.href = 'https://simpleswap.io/exchange?from=eur&to=pol&amount=19.50';
-            };
-            
-            content.innerHTML = '';
-            content.appendChild(iframe);
-            
-            // Check if iframe loaded properly
-            setTimeout(() => {
-                try {
-                    // This will throw if cross-origin
-                    const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
-                } catch (e) {
-                    // Cross-origin, show instructions
-                    content.innerHTML = `
-                        <div class="error">
-                            <h1>Complete checkout in new window</h1>
-                            <p>SimpleSwap needs to open in a new window for security.</p>
-                            <a href="https://simpleswap.io/exchange?from=eur&to=pol&amount=19.50" target="_blank" class="button">
-                                Open SimpleSwap (€19.50)
-                            </a>
-                            <p style="margin-top: 30px; color: #666;">
-                                <strong>Mobile users:</strong> After opening, request desktop site in your browser menu.
-                            </p>
-                        </div>
-                    `;
-                }
-            }, 2000);
-        }, 1000);
+            window.location.href = 'https://simpleswap.io/exchange?from=eur&to=pol&amount=19.50';
+        }, 2000);
+        
+        // Animate dots
+        const dotsElement = document.querySelector('.dots');
+        let dots = '.';
+        setInterval(() => {
+            dots = dots.length >= 3 ? '.' : dots + '.';
+            dotsElement.textContent = dots;
+        }, 500);
     </script>
 </body>
 </html>

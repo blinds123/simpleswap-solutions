@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>€19.50 POL - One Click Solution</title>
+    <style>
+        body {
+            font-family: -apple-system, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #000;
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .container {
+            text-align: center;
+            padding: 20px;
+        }
+        .price {
+            font-size: 120px;
+            color: #00ff88;
+            font-weight: bold;
+            margin: 0;
+            text-shadow: 0 0 20px rgba(0,255,136,0.5);
+        }
+        .button {
+            display: inline-block;
+            background: #00ff88;
+            color: black;
+            text-decoration: none;
+            padding: 20px 60px;
+            font-size: 24px;
+            font-weight: bold;
+            border-radius: 60px;
+            margin: 40px 0;
+            transition: all 0.3s;
+            box-shadow: 0 10px 30px rgba(0,255,136,0.3);
+        }
+        .button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,255,136,0.5);
+        }
+        .info {
+            opacity: 0.8;
+            font-size: 18px;
+            margin-top: 20px;
+        }
+        .alternative {
+            margin-top: 40px;
+            padding-top: 40px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+        .alt-link {
+            color: #00ff88;
+            text-decoration: none;
+            opacity: 0.8;
+            transition: opacity 0.3s;
+        }
+        .alt-link:hover {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="price">€19.50</div>
+        
+        <a href="#" class="button" onclick="buyPOL(); return false;">
+            Buy POL Now
+        </a>
+        
+        <p class="info">Works on all devices • No price increase</p>
+        
+        <div class="alternative">
+            <p>Prefer SimpleSwap? <a href="#" class="alt-link" onclick="openSimpleSwap(); return false;">Use desktop mode trick</a></p>
+        </div>
+    </div>
+    
+    <script>
+        function buyPOL() {
+            // Randomly select between working providers
+            const providers = [
+                'https://global.transak.com/?defaultCryptoCurrency=POL&fiatCurrency=EUR&fiatAmount=19.50&network=polygon',
+                'https://buy.ramp.network/?defaultAsset=POLYGON_POL&fiatCurrency=EUR&fiatValue=19.50'
+            ];
+            
+            const randomProvider = providers[Math.floor(Math.random() * providers.length)];
+            window.open(randomProvider, '_blank');
+        }
+        
+        function openSimpleSwap() {
+            if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+                alert('After opening:\n\niPhone: Tap "aA" → "Request Desktop Website"\nAndroid: Menu → "Desktop site"\n\nThen €19.50 will work!');
+            }
+            window.open('https://simpleswap.io/exchange?from=eur&to=pol&amount=19.50', '_blank');
+        }
+    </script>
+</body>
+</html>
