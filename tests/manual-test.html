@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manual Testing Suite - SimpleSwap Checkout</title>
+    <style>
+        body {
+            font-family: -apple-system, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .test-container {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .test-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        .test-card {
+            border: 2px solid #e0e6ed;
+            border-radius: 8px;
+            padding: 20px;
+            transition: all 0.3s ease;
+        }
+        .test-card:hover {
+            border-color: #00d4aa;
+            box-shadow: 0 4px 12px rgba(0,212,170,0.1);
+        }
+        .test-card.pass {
+            border-color: #28a745;
+            background: #f8fff9;
+        }
+        .test-card.fail {
+            border-color: #dc3545;
+            background: #fff8f8;
+        }
+        .test-card.pending {
+            border-color: #ffc107;
+            background: #fffef8;
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        h2 {
+            color: #00d4aa;
+            margin-top: 0;
+        }
+        .button {
+            background: #00d4aa;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            margin: 5px;
+            font-size: 14px;
+        }
+        .button:hover {
+            background: #00b894;
+        }
+        .button.test {
+            background: #667eea;
+        }
+        .button.pass {
+            background: #28a745;
+        }
+        .button.fail {
+            background: #dc3545;
+        }
+        .device-info {
+            background: #e3f2fd;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .test-status {
+            font-weight: bold;
+            padding: 5px 10px;
+            border-radius: 4px;
+            display: inline-block;
+            font-size: 12px;
+            margin-bottom: 10px;
+        }
+        .status-pass {
+            background: #d4edda;
+            color: #155724;
+        }
+        .status-fail {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+        .instructions {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 6px;
+            margin: 10px 0;
+            font-size: 14px;
+        }
+        .critical {
+            border-left: 4px solid #dc3545;
+            background: #fff5f5;
+        }
+        .url-test {
+            background: #f0f0f0;
+            padding: 10px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 12px;
+            word-break: break-all;
+            margin: 10px 0;
+        }
+        .metrics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .metric {
+            text-align: center;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+        .metric-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #00d4aa;
+        }
+        .metric-label {
+            font-size: 12px;
+            color: #7f8c8d;
+            text-transform: uppercase;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>🧪 Manual Testing Suite</h1>
+        
+        <div class="device-info">
+            <h3>Current Device Information</h3>
+            <div id="deviceInfo"></div>
+        </div>
+        
+        <div class="metrics">
+            <div class="metric">
+                <div class="metric-value" id="totalTests">0</div>
+                <div class="metric-label">Total Tests</div>
+            </div>
+            <div class="metric">
+                <div class="metric-value" id="passedTests">0</div>
+                <div class="metric-label">Passed</div>
+            </div>
+            <div class="metric">
+                <div class="metric-value" id="failedTests">0</div>
+                <div class="metric-label">Failed</div>
+            </div>
+            <div class="metric">
+                <div class="metric-value" id="successRate">0%</div>
+                <div class="metric-label">Success Rate</div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="test-container">
+        <h2>📱 Mobile Device Tests</h2>
+        <div class="test-grid" id="mobileTests"></div>
+    </div>
+    
+    <div class="test-container">
+        <h2>🖥️ Desktop Browser Tests</h2>
+        <div class="test-grid" id="desktopTests"></div>
+    </div>
+    
+    <div class="test-container">
+        <h2>💰 Price Validation Tests</h2>
+        <div class="test-grid" id="priceTests"></div>
+    </div>
+    
+    <div class="test-container">
+        <h2>🔄 Flow Integration Tests</h2>
+        <div class="test-grid" id="flowTests"></div>
+    </div>
+    
+    <div class="test-container">
+        <h2>❌ Error Handling Tests</h2>
+        <div class="test-grid" id="errorTests"></div>
+    </div>
+
+    <script>
+        // Test results storage
+        let testResults = JSON.parse(localStorage.getItem('test_results') || '{}');
+        
+        // Test definitions
+        const testSuites = {
+            mobile: [
+                {
+                    id: 'iphone_safari',
+                    name: 'iPhone Safari',
+                    description: 'Test EUR→USDT maintains €19.50 on iPhone Safari',
+                    critical: true,
+                    instructions: [
+                        'Open production checkout on iPhone Safari',
+                        'Click "Buy USDT for €19.50"',
+                        'Verify redirect to SimpleSwap',
+                        'Confirm price shows €19.50 (NOT €21.42)',
+                        'Verify Mercuryo is available'
+                    ],
+                    expectedResult: '€19.50 maintained, Mercuryo available'
+                },
+                {
+                    id: 'android_chrome',
+                    name: 'Android Chrome',
+                    description: 'Test EUR→USDT maintains €19.50 on Android Chrome',
+                    critical: true,
+                    instructions: [
+                        'Open production checkout on Android Chrome',
+                        'Click "Buy USDT for €19.50"',
+                        'Verify redirect to SimpleSwap',
+                        'Confirm price shows €19.50 (NOT €21.42)',
+                        'Verify Mercuryo is available'
+                    ],
+                    expectedResult: '€19.50 maintained, Mercuryo available'
+                },
+                {
+                    id: 'ipad_safari',
+                    name: 'iPad Safari',
+                    description: 'Test EUR→USDT on iPad Safari',
+                    critical: false,
+                    instructions: [
+                        'Open production checkout on iPad Safari',
+                        'Test portrait and landscape modes',
+                        'Verify responsive design works',
+                        'Complete flow test'
+                    ],
+                    expectedResult: 'Responsive design works, flow completes'
+                },
+                {
+                    id: 'mobile_firefox',
+                    name: 'Mobile Firefox',
+                    description: 'Test on mobile Firefox browser',
+                    critical: false,
+                    instructions: [
+                        'Open production checkout on mobile Firefox',
+                        'Test complete flow',
+                        'Check for any browser-specific issues'
+                    ],
+                    expectedResult: 'Works correctly on mobile Firefox'
+                }
+            ],
+            desktop: [
+                {
+                    id: 'chrome_desktop',
+                    name: 'Chrome Desktop',
+                    description: 'Test complete flow on Chrome desktop',
+                    critical: true,
+                    instructions: [
+                        'Open production checkout on Chrome desktop',
+                        'Complete full EUR→USDT→POL flow',
+                        'Verify state persistence across redirects',
+                        'Test return handling'
+                    ],
+                    expectedResult: 'Complete flow works, state persists'
+                },
+                {
+                    id: 'firefox_desktop',
+                    name: 'Firefox Desktop',
+                    description: 'Test complete flow on Firefox desktop',
+                    critical: true,
+                    instructions: [
+                        'Open production checkout on Firefox desktop',
+                        'Test localStorage functionality',
+                        'Complete full flow',
+                        'Check console for errors'
+                    ],
+                    expectedResult: 'Works correctly on Firefox'
+                },
+                {
+                    id: 'safari_desktop',
+                    name: 'Safari Desktop',
+                    description: 'Test complete flow on Safari desktop (macOS)',
+                    critical: true,
+                    instructions: [
+                        'Open production checkout on Safari desktop',
+                        'Test with strict security settings',
+                        'Complete full flow',
+                        'Verify tracking works'
+                    ],
+                    expectedResult: 'Works correctly on Safari'
+                },
+                {
+                    id: 'edge_desktop',
+                    name: 'Edge Desktop',
+                    description: 'Test complete flow on Microsoft Edge',
+                    critical: false,
+                    instructions: [
+                        'Open production checkout on Edge',
+                        'Test complete flow',
+                        'Check compatibility'
+                    ],
+                    expectedResult: 'Works correctly on Edge'
+                }
+            ],
+            price: [
+                {
+                    id: 'price_lock_step1',
+                    name: 'Price Lock Step 1',
+                    description: 'Verify €19.50 is maintained in EUR→USDT',
+                    critical: true,
+                    instructions: [
+                        'Start checkout flow',
+                        'Click "Buy USDT for €19.50"',
+                        'On SimpleSwap page, verify amount is €19.50',
+                        'Verify Mercuryo is shown (green border)',
+                        'DO NOT complete purchase'
+                    ],
+                    expectedResult: '€19.50 shown, Mercuryo available'
+                },
+                {
+                    id: 'no_moonpay_forcing',
+                    name: 'No MoonPay Forcing',
+                    description: 'Verify MoonPay does not force €21.42',
+                    critical: true,
+                    instructions: [
+                        'Test on mobile device',
+                        'Start checkout flow',
+                        'Verify price is NOT increased to €21.42',
+                        'Verify MoonPay is NOT the only option'
+                    ],
+                    expectedResult: 'No forced increase to €21.42'
+                },
+                {
+                    id: 'bridge_currency_test',
+                    name: 'Bridge Currency Validation',
+                    description: 'Test USDT→POL conversion has no minimums',
+                    critical: false,
+                    instructions: [
+                        'Complete Step 1 (EUR→USDT)',
+                        'Start Step 2 (USDT→POL)',
+                        'Verify no minimum amount restrictions',
+                        'Test with small USDT amount'
+                    ],
+                    expectedResult: 'USDT→POL has no minimums'
+                }
+            ],
+            flow: [
+                {
+                    id: 'state_persistence',
+                    name: 'State Persistence',
+                    description: 'Test state persists across browser redirects',
+                    critical: true,
+                    instructions: [
+                        'Start checkout flow',
+                        'Begin Step 1, get redirected to SimpleSwap',
+                        'Return to checkout page (back button or new tab)',
+                        'Verify you\'re on Step 2',
+                        'Check localStorage for saved state'
+                    ],
+                    expectedResult: 'State persists, shows Step 2'
+                },
+                {
+                    id: 'return_detection',
+                    name: 'Return Detection',
+                    description: 'Test detection of return from SimpleSwap',
+                    critical: true,
+                    instructions: [
+                        'Start Step 1',
+                        'Complete EUR→USDT on SimpleSwap',
+                        'Return to checkout page',
+                        'Verify automatic progression to Step 2',
+                        'Check success animation plays'
+                    ],
+                    expectedResult: 'Auto-detects return, shows Step 2'
+                },
+                {
+                    id: 'complete_flow',
+                    name: 'Complete Flow Test',
+                    description: 'Test entire EUR→USDT→POL flow end-to-end',
+                    critical: true,
+                    instructions: [
+                        'Start with €19.50',
+                        'Complete EUR→USDT (Step 1)',
+                        'Confirm USDT receipt',
+                        'Complete USDT→POL (Step 2)',
+                        'Verify success page',
+                        'Check analytics tracking'
+                    ],
+                    expectedResult: 'Complete flow successful, analytics tracked'
+                },
+                {
+                    id: 'reset_functionality',
+                    name: 'Reset Functionality',
+                    description: 'Test flow reset works correctly',
+                    critical: false,
+                    instructions: [
+                        'Start checkout flow',
+                        'Progress to Step 2',
+                        'Click "Start New Purchase"',
+                        'Verify reset to Step 1',
+                        'Check localStorage is cleared'
+                    ],
+                    expectedResult: 'Reset works, returns to Step 1'
+                }
+            ],
+            error: [
+                {
+                    id: 'network_error',
+                    name: 'Network Error Handling',
+                    description: 'Test behavior when network is lost',
+                    critical: false,
+                    instructions: [
+                        'Start checkout flow',
+                        'Disable network connection',
+                        'Try to proceed to Step 1',
+                        'Verify error message is shown',
+                        'Re-enable network, verify recovery'
+                    ],
+                    expectedResult: 'Shows error, recovers when network restored'
+                },
+                {
+                    id: 'storage_error',
+                    name: 'Storage Error Handling',
+                    description: 'Test behavior when localStorage is disabled',
+                    critical: false,
+                    instructions: [
+                        'Disable localStorage in browser',
+                        'Start checkout flow',
+                        'Verify graceful degradation',
+                        'Check fallback to sessionStorage'
+                    ],
+                    expectedResult: 'Graceful degradation, uses sessionStorage'
+                },
+                {
+                    id: 'interrupted_flow',
+                    name: 'Interrupted Flow Recovery',
+                    description: 'Test recovery from interrupted flow',
+                    critical: false,
+                    instructions: [
+                        'Start Step 1',
+                        'Close browser tab during redirect',
+                        'Reopen checkout page',
+                        'Verify recovery to appropriate step'
+                    ],
+                    expectedResult: 'Recovers to correct step'
+                }
+            ]
+        };
+        
+        // Initialize device info
+        function updateDeviceInfo() {
+            const info = {
+                userAgent: navigator.userAgent,
+                platform: navigator.platform,
+                language: navigator.language,
+                cookieEnabled: navigator.cookieEnabled,
+                onLine: navigator.onLine,
+                viewport: `${window.innerWidth}x${window.innerHeight}`,
+                pixelRatio: window.devicePixelRatio || 1,
+                touchPoints: navigator.maxTouchPoints || 0
+            };
+            
+            document.getElementById('deviceInfo').innerHTML = `
+                <strong>Device:</strong> ${getDeviceType()}<br>
+                <strong>Browser:</strong> ${getBrowserInfo()}<br>
+                <strong>Viewport:</strong> ${info.viewport}<br>
+                <strong>Touch Points:</strong> ${info.touchPoints}<br>
+                <strong>Pixel Ratio:</strong> ${info.pixelRatio}<br>
+                <strong>Online:</strong> ${info.onLine ? '✅' : '❌'}<br>
+                <strong>Cookies:</strong> ${info.cookieEnabled ? '✅' : '❌'}
+            `;
+        }
+        
+        function getDeviceType() {
+            const ua = navigator.userAgent.toLowerCase();
+            if (/iphone|ipod/.test(ua)) return '📱 iPhone';
+            if (/ipad/.test(ua)) return '📱 iPad';
+            if (/android/.test(ua)) {
+                if (/mobile/.test(ua)) return '📱 Android Phone';
+                return '📱 Android Tablet';
+            }
+            if (/mobile/.test(ua)) return '📱 Mobile';
+            return '🖥️ Desktop';
+        }
+        
+        function getBrowserInfo() {
+            const ua = navigator.userAgent;
+            if (ua.includes('Chrome')) return '🌐 Chrome';
+            if (ua.includes('Firefox')) return '🌐 Firefox';
+            if (ua.includes('Safari') && !ua.includes('Chrome')) return '🌐 Safari';
+            if (ua.includes('Edge')) return '🌐 Edge';
+            return '🌐 Unknown';
+        }
+        
+        // Render test suites
+        function renderTestSuite(suiteName, tests, containerId) {
+            const container = document.getElementById(containerId);
+            
+            tests.forEach(test => {
+                const result = testResults[test.id] || 'pending';
+                const card = document.createElement('div');
+                card.className = `test-card ${result}`;
+                
+                const criticalBadge = test.critical ? 
+                    '<span class="test-status status-fail">CRITICAL</span>' : '';
+                
+                const statusBadge = `<span class="test-status status-${result}">${result.toUpperCase()}</span>`;
+                
+                card.innerHTML = `
+                    ${criticalBadge}
+                    ${statusBadge}
+                    <h3>${test.name}</h3>
+                    <p>${test.description}</p>
+                    
+                    <div class="instructions ${test.critical ? 'critical' : ''}">
+                        <strong>Instructions:</strong>
+                        <ol>
+                            ${test.instructions.map(inst => `<li>${inst}</li>`).join('')}
+                        </ol>
+                    </div>
+                    
+                    <div class="url-test">
+                        <strong>Expected:</strong> ${test.expectedResult}
+                    </div>
+                    
+                    <div style="margin-top: 15px;">
+                        <button class="button test" onclick="startTest('${test.id}')">
+                            Start Test
+                        </button>
+                        <button class="button pass" onclick="markTest('${test.id}', 'pass')">
+                            ✅ Pass
+                        </button>
+                        <button class="button fail" onclick="markTest('${test.id}', 'fail')">
+                            ❌ Fail
+                        </button>
+                    </div>
+                `;
+                
+                container.appendChild(card);
+            });
+        }
+        
+        // Test actions
+        function startTest(testId) {
+            console.log(`🧪 Starting test: ${testId}`);
+            
+            // Find the test
+            let test = null;
+            for (const suite of Object.values(testSuites)) {
+                test = suite.find(t => t.id === testId);
+                if (test) break;
+            }
+            
+            if (!test) return;
+            
+            // Open production checkout in new tab for testing
+            if (testId.includes('desktop') || testId.includes('mobile') || testId.includes('price')) {
+                window.open('../production/', '_blank');
+            } else if (testId.includes('skeleton')) {
+                window.open('../skeleton/', '_blank');
+            }
+            
+            // Track test start
+            if (window.tracker) {
+                window.tracker.track('test_started', {
+                    testId,
+                    testName: test.name,
+                    critical: test.critical
+                });
+            }
+        }
+        
+        function markTest(testId, result) {
+            testResults[testId] = result;
+            localStorage.setItem('test_results', JSON.stringify(testResults));
+            
+            // Track test result
+            if (window.tracker) {
+                window.tracker.track('test_completed', {
+                    testId,
+                    result,
+                    timestamp: Date.now()
+                });
+            }
+            
+            // Re-render to update UI
+            location.reload();
+        }
+        
+        // Metrics calculation
+        function updateMetrics() {
+            const allTests = [
+                ...testSuites.mobile,
+                ...testSuites.desktop,
+                ...testSuites.price,
+                ...testSuites.flow,
+                ...testSuites.error
+            ];
+            
+            const total = allTests.length;
+            const passed = Object.values(testResults).filter(r => r === 'pass').length;
+            const failed = Object.values(testResults).filter(r => r === 'fail').length;
+            const successRate = total > 0 ? Math.round((passed / total) * 100) : 0;
+            
+            document.getElementById('totalTests').textContent = total;
+            document.getElementById('passedTests').textContent = passed;
+            document.getElementById('failedTests').textContent = failed;
+            document.getElementById('successRate').textContent = `${successRate}%`;
+        }
+        
+        // Export test results
+        function exportResults() {
+            const results = {
+                timestamp: new Date().toISOString(),
+                deviceInfo: getDeviceType(),
+                browserInfo: getBrowserInfo(),
+                testResults,
+                metrics: {
+                    total: Object.keys(testResults).length,
+                    passed: Object.values(testResults).filter(r => r === 'pass').length,
+                    failed: Object.values(testResults).filter(r => r === 'fail').length
+                }
+            };
+            
+            console.log('📊 Test Results Export:', results);
+            
+            // Download as JSON
+            const blob = new Blob([JSON.stringify(results, null, 2)], {
+                type: 'application/json'
+            });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `simpleswap-test-results-${Date.now()}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+        
+        // Initialize page
+        function init() {
+            updateDeviceInfo();
+            renderTestSuite('mobile', testSuites.mobile, 'mobileTests');
+            renderTestSuite('desktop', testSuites.desktop, 'desktopTests');
+            renderTestSuite('price', testSuites.price, 'priceTests');
+            renderTestSuite('flow', testSuites.flow, 'flowTests');
+            renderTestSuite('error', testSuites.error, 'errorTests');
+            updateMetrics();
+            
+            // Add export button
+            const exportBtn = document.createElement('button');
+            exportBtn.className = 'button';
+            exportBtn.textContent = '📋 Export Results';
+            exportBtn.onclick = exportResults;
+            exportBtn.style.position = 'fixed';
+            exportBtn.style.bottom = '20px';
+            exportBtn.style.right = '20px';
+            document.body.appendChild(exportBtn);
+        }
+        
+        // Global functions
+        window.startTest = startTest;
+        window.markTest = markTest;
+        window.exportResults = exportResults;
+        
+        // Initialize when DOM loads
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>

@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>€19.50 POL Checkout - Guaranteed Price</title>
+    <link rel="stylesheet" href="styles.css">
+    <meta name="description" content="Buy POL for exactly €19.50 - guaranteed price on all devices">
+    <meta name="theme-color" content="#00d4aa">
+</head>
+<body>
+    <div class="checkout-container">
+        <!-- Header -->
+        <header class="checkout-header">
+            <h1>Buy POL (Polygon)</h1>
+            <div class="price-display">
+                <span class="currency">€</span>
+                <span class="amount">19.50</span>
+                <span class="guarantee">Guaranteed Price</span>
+            </div>
+        </header>
+
+        <!-- Progress Indicator -->
+        <div class="progress-indicator">
+            <div class="progress-step active" data-step="1">
+                <div class="step-number">1</div>
+                <div class="step-label">Buy USDT</div>
+            </div>
+            <div class="progress-line"></div>
+            <div class="progress-step" data-step="2">
+                <div class="step-number">2</div>
+                <div class="step-label">Confirm</div>
+            </div>
+            <div class="progress-line"></div>
+            <div class="progress-step" data-step="3">
+                <div class="step-number">3</div>
+                <div class="step-label">Get POL</div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <main class="checkout-main">
+            <!-- Step 1: EUR to USDT -->
+            <section id="step1" class="checkout-step active">
+                <h2>Step 1: Purchase USDT</h2>
+                <div class="step-content">
+                    <div class="info-box">
+                        <svg class="info-icon" width="24" height="24" viewBox="0 0 24 24">
+                            <path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/>
+                        </svg>
+                        <p>We use USDT as an intermediate step to guarantee your €19.50 price on all devices.</p>
+                    </div>
+                    
+                    <div class="flow-diagram">
+                        <div class="flow-step current">€19.50 EUR</div>
+                        <div class="flow-arrow">→</div>
+                        <div class="flow-step">USDT</div>
+                        <div class="flow-arrow inactive">→</div>
+                        <div class="flow-step inactive">POL</div>
+                    </div>
+
+                    <button class="primary-button" onclick="checkout.startStep1()">
+                        <span class="button-text">Buy USDT for €19.50</span>
+                        <svg class="button-arrow" width="20" height="20" viewBox="0 0 20 20">
+                            <path fill="currentColor" d="M12.95 10.7l-5.65 5.65a1 1 0 01-1.41-1.41L10.83 10 5.89 5.06a1 1 0 011.41-1.41l5.65 5.65a1 1 0 010 1.4z"/>
+                        </svg>
+                    </button>
+                    
+                    <div class="step-note">
+                        You'll be redirected to SimpleSwap to complete the purchase with Mercuryo.
+                    </div>
+                </div>
+            </section>
+
+            <!-- Step 2: Confirmation -->
+            <section id="step2" class="checkout-step">
+                <h2>Step 2: Confirm USDT Receipt</h2>
+                <div class="step-content">
+                    <div class="success-message">
+                        <svg class="success-icon" width="48" height="48" viewBox="0 0 48 48">
+                            <circle cx="24" cy="24" r="22" fill="#00d4aa" opacity="0.1"/>
+                            <path d="M20.5 28.5L16 24l-1.5 1.5L20.5 32 34 18.5 32.5 17z" fill="#00d4aa"/>
+                        </svg>
+                        <h3>USDT Purchase Initiated!</h3>
+                        <p>Once you've received your USDT, click continue to convert it to POL.</p>
+                    </div>
+
+                    <div class="confirmation-options">
+                        <label class="checkbox-container">
+                            <input type="checkbox" id="confirmReceipt" onchange="checkout.toggleStep2Button()">
+                            <span class="checkmark"></span>
+                            <span class="label-text">I have received my USDT</span>
+                        </label>
+                    </div>
+
+                    <div class="flow-diagram">
+                        <div class="flow-step completed">€19.50 EUR</div>
+                        <div class="flow-arrow completed">→</div>
+                        <div class="flow-step current">USDT</div>
+                        <div class="flow-arrow">→</div>
+                        <div class="flow-step">POL</div>
+                    </div>
+
+                    <button class="primary-button" id="step2Button" disabled onclick="checkout.startStep2()">
+                        <span class="button-text">Convert USDT to POL</span>
+                        <svg class="button-arrow" width="20" height="20" viewBox="0 0 20 20">
+                            <path fill="currentColor" d="M12.95 10.7l-5.65 5.65a1 1 0 01-1.41-1.41L10.83 10 5.89 5.06a1 1 0 011.41-1.41l5.65 5.65a1 1 0 010 1.4z"/>
+                        </svg>
+                    </button>
+
+                    <div class="help-section">
+                        <details>
+                            <summary>Need help?</summary>
+                            <ul>
+                                <li>Check your email for SimpleSwap confirmation</li>
+                                <li>USDT typically arrives within 5-15 minutes</li>
+                                <li>Make sure you saved your USDT wallet address</li>
+                                <li>If you don't receive USDT within 30 minutes, contact SimpleSwap support</li>
+                            </ul>
+                        </details>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Step 3: Complete -->
+            <section id="step3" class="checkout-step">
+                <h2>Success!</h2>
+                <div class="step-content">
+                    <div class="completion-animation">
+                        <svg class="checkmark-circle" width="120" height="120" viewBox="0 0 120 120">
+                            <circle cx="60" cy="60" r="54" fill="none" stroke="#00d4aa" stroke-width="4"/>
+                            <path class="checkmark-path" d="M40 60l15 15 30-30" fill="none" stroke="#00d4aa" stroke-width="6"/>
+                        </svg>
+                    </div>
+
+                    <div class="success-details">
+                        <h3>POL Purchase Complete!</h3>
+                        <p>You've successfully purchased POL for exactly €19.50</p>
+                        
+                        <div class="flow-diagram">
+                            <div class="flow-step completed">€19.50 EUR</div>
+                            <div class="flow-arrow completed">→</div>
+                            <div class="flow-step completed">USDT</div>
+                            <div class="flow-arrow completed">→</div>
+                            <div class="flow-step completed">POL</div>
+                        </div>
+
+                        <div class="completion-stats">
+                            <div class="stat">
+                                <div class="stat-value">€19.50</div>
+                                <div class="stat-label">Total Paid</div>
+                            </div>
+                            <div class="stat">
+                                <div class="stat-value">100%</div>
+                                <div class="stat-label">Success Rate</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button class="secondary-button" onclick="checkout.reset()">
+                        Start New Purchase
+                    </button>
+                </div>
+            </section>
+        </main>
+
+        <!-- Error Display -->
+        <div id="errorContainer" class="error-container hidden">
+            <div class="error-message">
+                <svg class="error-icon" width="24" height="24" viewBox="0 0 24 24">
+                    <path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+                </svg>
+                <span id="errorText"></span>
+                <button class="close-error" onclick="checkout.clearError()">×</button>
+            </div>
+        </div>
+
+        <!-- Loading Overlay -->
+        <div id="loadingOverlay" class="loading-overlay hidden">
+            <div class="spinner"></div>
+            <p>Preparing your checkout...</p>
+        </div>
+
+        <!-- Device Detection Info -->
+        <div class="device-info">
+            <span id="deviceType"></span>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="bridge-flow.js"></script>
+    <script src="ui-components.js"></script>
+    <script src="error-handler.js"></script>
+    <script src="tracker.js"></script>
+    <script src="checkout.js"></script>
+</body>
+</html>
